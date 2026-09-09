@@ -11,7 +11,17 @@ export type RoleId =
 export type Role = {
   id: RoleId;
   name: string;
-  who: string;
+  /**
+   * What the role covers, in functional terms.
+   *
+   * This must describe ACCESS, never the business: no named individuals, no
+   * statement of who owns or built the platform, no share-of-platform figure.
+   * `/signin` and `/dashboard` both render it, and `/signin` sits in front of
+   * the auth wall — so anything written here is published to anyone who
+   * reaches the app. A `who` field naming real people and an ownership line
+   * used to live alongside this one and were rendered on both screens; they
+   * were removed rather than hidden, so no future consumer can resurface them.
+   */
   scope: string;
   /** Landing screen after sign-in. */
   home: string;
@@ -19,8 +29,6 @@ export type Role = {
   pods: Array<1 | 2 | 3 | 4>;
   /** Access tier — 1 = widest. Roles on the same tier have the same reach. */
   tier: number;
-  /** Rough share of the platform this role can reach, for the funnel graphic. */
-  reach: number;
   /** Can this role act on human gates (approve / decide)? */
   canDecide: boolean;
   sees: string[];
@@ -32,10 +40,8 @@ export const ROLES: Role[] = [
   {
     id: "platform-owner-admin",
     name: "Platform Owner",
-    who: "Delano — owns the platform",
-    scope: "Whole platform. Nothing is out of reach.",
+    scope: "Every tenant, sub-tenant and pod, plus platform administration.",
     tier: 1,
-    reach: 100,
     home: "/dashboard",
     pods: [1, 2, 3, 4],
     canDecide: true,
@@ -52,10 +58,8 @@ export const ROLES: Role[] = [
   {
     id: "super-admin",
     name: "Super Administrator",
-    who: "Daniel — built the platform",
-    scope: "Same reach as the platform owner. The difference is ownership, not access.",
+    scope: "Full administrative access across every tenant, sub-tenant and pod.",
     tier: 1,
-    reach: 100,
     home: "/dashboard",
     pods: [1, 2, 3, 4],
     canDecide: true,
@@ -71,10 +75,8 @@ export const ROLES: Role[] = [
   {
     id: "subtenant-admin",
     name: "Sub-Tenant Admin",
-    who: "Julie — MTM",
     scope: "One sub-tenant (MTM) and everyone working under it.",
     tier: 2,
-    reach: 70,
     home: "/dashboard",
     pods: [1, 2, 3],
     canDecide: true,
@@ -94,10 +96,8 @@ export const ROLES: Role[] = [
   {
     id: "proposal-manager",
     name: "Proposal Manager",
-    who: "Capture and proposal staff inside MTM",
     scope: "The proposal and event work itself, from opportunity to submission.",
     tier: 3,
-    reach: 45,
     home: "/pipeline",
     pods: [1, 2],
     canDecide: false,
@@ -118,10 +118,8 @@ export const ROLES: Role[] = [
   {
     id: "trainer",
     name: "Trainer",
-    who: "Runs onboarding and training",
     scope: "Training material and practice content — never live pursuits.",
     tier: 3,
-    reach: 35,
     home: "/dashboard",
     pods: [1, 4],
     canDecide: false,
@@ -139,11 +137,9 @@ export const ROLES: Role[] = [
   {
     id: "subtenant-user",
     name: "Sub-Tenant User",
-    who: "Reggie and others working under MTM",
     scope:
       "Business development. Looks up client information to have the conversation — does not write or analyse proposals.",
     tier: 4,
-    reach: 25,
     home: "/pipeline",
     pods: [1],
     canDecide: false,
@@ -164,10 +160,8 @@ export const ROLES: Role[] = [
   {
     id: "reviewer",
     name: "Reviewer",
-    who: "Internal or client-side reviewers",
     scope: "Read, comment and sign off on what is shared with them.",
     tier: 4,
-    reach: 18,
     home: "/approvals",
     pods: [1, 3],
     canDecide: true,
@@ -186,10 +180,8 @@ export const ROLES: Role[] = [
   {
     id: "viewer",
     name: "Viewer",
-    who: "End clients — switches on at go-live",
     scope: "A read-only progress window on their own work.",
     tier: 5,
-    reach: 8,
     home: "/dashboard",
     pods: [1],
     canDecide: false,
