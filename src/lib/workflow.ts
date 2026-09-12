@@ -49,7 +49,7 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
 
   // ── Pod 1 · Proposal Factory — 12 phases, 70 steps ──────────────────────
   {
-    path: "/pipeline",
+    path: "/discovery",
     label: "Pipeline / Discovery",
     pod: 1,
     phase: "Find opportunities",
@@ -575,7 +575,7 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
     ],
   },
 
-  // ── Reference & Roadmap — Executive Overview, master map, connectors, future pods ──
+  // ── Reference & Roadmap — Executive Overview, master map, connectors ──
   {
     path: "/overview",
     label: "Executive Overview",
@@ -625,7 +625,6 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
       { n: 14, name: "Event Intake", agent: "Event Intake Parser", gate: "If client-facing" },
       { n: 15, name: "Event Budget", agent: "Budget Analyst", gate: "Human approves budget" },
       { n: 16, name: "Registration / Attendee Mgmt", agent: "Registration Manager", gate: "Human approves public launch" },
-      { n: 17, name: "Future Pod Launch / Delivery", agent: "Future pod agents", gate: "Human gates by risk" },
     ],
   },
   {
@@ -655,43 +654,14 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
     ],
   },
   {
-    path: "/future-pods",
-    label: "Future Pods",
-    pod: 4,
-    phase: "9 marketing + 8 industry families",
-    agent: "New pods inherit rails — never fork architecture",
-    artifact: "Reusable pod template",
-    annotation:
-      "Every future pod inherits companion, agent registry, gates, Pod 3 governance, MCP map, dashboards, and token rules. Nothing forks the architecture.",
-    steps: [
-      { n: 1, name: "Advertising", agent: "Media Planner, Bid Manager, Ad Copy Optimizer", gate: "Marketing · spend gate" },
-      { n: 2, name: "PR / Communications", agent: "Press Writer, Coverage Tracker, Crisis Monitor", gate: "Marketing · release gate" },
-      { n: 3, name: "Creative / Content", agent: "Copy Amplifier, Asset Manager, QA Brand Guardian", gate: "Marketing · brand gate" },
-      { n: 4, name: "Research", agent: "Survey Designer, Trend Forecaster, Data Analyst", gate: "Marketing · methodology" },
-      { n: 5, name: "Brand / Campaign Strategy", agent: "Positioning Agent, Messaging Architect", gate: "Marketing · strategy gate" },
-      { n: 6, name: "Direct / CRM Marketing", agent: "Personalization Engine, Journey Builder", gate: "Marketing · launch gate" },
-      { n: 7, name: "Web / Digital Experience", agent: "Code Assistant, Security Scanner, Deploy Manager", gate: "Marketing · deploy gate" },
-      { n: 8, name: "Video / Production", agent: "Script Developer, Edit Assistant, Review Coordinator", gate: "Marketing · final cut" },
-      { n: 9, name: "Social / Influencer", agent: "Content Scheduler, Influencer Scout, Trend Spotter", gate: "Marketing · crisis gate" },
-      { n: 10, name: "Construction", agent: "Estimator, Permit Tracker, Schedule Builder", gate: "Industry · estimate/safety" },
-      { n: 11, name: "Janitorial / Facilities", agent: "Staffing Scheduler, Quality Inspector, Route Planner", gate: "Industry · staffing/QA" },
-      { n: 12, name: "Technology / Cyber", agent: "Solution Architect, Security Reviewer, Compliance Tracker", gate: "Industry · security/deploy" },
-      { n: 13, name: "Staffing", agent: "Candidate Matcher, Credential Checker, Payroll Handoff", gate: "Industry · credentialing" },
-      { n: 14, name: "Financial Services", agent: "Compliance Reviewer, Risk Analyst, Audit Packager", gate: "Industry · compliance" },
-      { n: 15, name: "Healthcare / Home Health", agent: "Referral Intake, Care Plan Support, Billing", gate: "Industry · care/billing" },
-      { n: 16, name: "Logistics / Transportation", agent: "Route Planner, Fleet Scheduler, Dispatch Assist", gate: "Industry · safety" },
-      { n: 17, name: "Training / Education", agent: "Curriculum Planner, Assessment Builder, Certificates", gate: "Industry · curriculum" },
-    ],
-  },
-  {
     path: "/roadmap",
     label: "Implementation Roadmap",
     pod: 4,
     phase: "7 build phases",
-    agent: "Daniel/JTS + Delano",
+    agent: "Super Administrator/JTS + Platform Owner",
     artifact: "Phased delivery plan",
     annotation:
-      "Pod 1's revenue engine ships first. Pod 3's trigger engine and the MCP gateway follow; future pods are a template exercise, not new architecture.",
+      "Pod 1's revenue engine ships first. Pod 3's trigger engine and the MCP gateway follow.",
     steps: [
       { n: 1, name: "Phase 1 · Protect Pod 1 revenue engine", agent: "2–4 wks · Cost Drafter → Budget Tracker, final cost, doc lock", gate: "Don't overbuild" },
       { n: 2, name: "Phase 1A · Workflow visibility", agent: "1 wk · 70-step registry, handoff map, maturity per step", gate: "Steps not always mandatory" },
@@ -699,7 +669,6 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
       { n: 4, name: "Phase 2A · Pod 2 detailed workflow", agent: "2–3 wks · Intake through closeout with Eve", gate: "Modular by event type" },
       { n: 5, name: "Phase 3 · Pod 3 trigger engine", agent: "2–3 wks · Threshold rules, approval routing, audit events", gate: "Not a linear workflow" },
       { n: 6, name: "Phase 4 · MCP / Integration Gateway", agent: "3–6 wks · MCP-lite services, auth, audit, rate limits", gate: "Start manual/one-way" },
-      { n: 7, name: "Phase 5 · Future pod template", agent: "2–3 wks · Companion, agent registry, gates, MCP map", gate: "Inherit, don't fork" },
     ],
   },
   {
@@ -708,9 +677,9 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
     pod: 4,
     phase: "Guiding principles + data dictionary",
     agent: "Platform doctrine",
-    artifact: "Design rules for every future build",
+    artifact: "Design rules for the platform",
     annotation:
-      "The data dictionary defines every column of the model: lead pod, lead agent, primary output, collaborating agents, companion role, governance, MCP connector, human gate, maturity, token rule, build priority, and future-pod reuse.",
+      "The data dictionary defines every column of the model: lead pod, lead agent, primary output, collaborating agents, companion role, governance, MCP connector, human gate, maturity, token rule, and build priority.",
     steps: [
       { n: 1, name: "Two-layer workbook", agent: "Master map is the map; pod tabs are build instructions" },
       { n: 2, name: "Event-triggered workflows", agent: "Rerun only affected agents — never fire everything" },
@@ -719,10 +688,46 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
       { n: 5, name: "Human gates by risk", agent: "Money, compliance, access, external release, submission, delivery", gate: "Always human" },
       { n: 6, name: "Token optimization", agent: "Deterministic first; LLMs for judgment and narrative", gate: "Cost posture" },
       { n: 7, name: "Autonomy is earned", agent: "Per agent, per step, per sub-client — revocable" },
-      { n: 8, name: "Future pod rails", agent: "New pods inherit everything; expansion without breakage" },
       { n: 9, name: "The Proposal Factory™ brand", agent: "Trademark mark on all docs, decks, PDFs" },
     ],
   },
 ];
 
 export const stepIndex = (path: string) => WORKFLOW_STEPS.findIndex((s) => s.path === path);
+
+export type Pod1WorkflowPosition = {
+  phase: WorkflowStep;
+  step: SubStep;
+  indexInPhase: number;
+};
+
+/** The authoritative, ordered Step 1–70 sequence for Pod 1. */
+export const POD1_WORKFLOW: Pod1WorkflowPosition[] = WORKFLOW_STEPS
+  .filter((phase) => phase.pod === 1)
+  .flatMap((phase) =>
+    (phase.steps ?? []).map((step, indexInPhase) => ({ phase, step, indexInPhase })),
+  )
+  .sort((a, b) => a.step.n - b.step.n);
+
+export function pod1Position(stepNumber: number) {
+  return POD1_WORKFLOW.find((position) => position.step.n === stepNumber);
+}
+
+export function adjacentPod1Step(stepNumber: number, direction: -1 | 1) {
+  const index = POD1_WORKFLOW.findIndex((position) => position.step.n === stepNumber);
+  if (index < 0) return undefined;
+  return POD1_WORKFLOW[index + direction];
+}
+
+/** Only explicit human decisions/actions block progression in the wireframe. */
+export function isBlockingHumanGate(step: SubStep) {
+  const gate = step.gate?.toLowerCase() ?? "";
+  const agent = step.agent.toLowerCase();
+  return (
+    agent === "hitl" ||
+    agent === "user action" ||
+    gate.includes("human gate") ||
+    gate.includes("human action") ||
+    gate.includes("human readiness gate")
+  );
+}

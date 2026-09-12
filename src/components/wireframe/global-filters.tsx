@@ -80,7 +80,7 @@ export function GlobalFilters({ className = "", pod = 1 }: { className?: string;
             {active} active
           </span>
         )}
-        <span className="rounded-full border border-dashed border-wireline px-2 py-0.5 font-mono text-[9px] text-muted-foreground">
+        <span className="rounded-full border border-wireline px-2 py-0.5 font-mono text-[9px] text-muted-foreground">
           {results.length} {copy.items} · {money(total)}
         </span>
         <span className="ml-auto font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -89,7 +89,7 @@ export function GlobalFilters({ className = "", pod = 1 }: { className?: string;
       </button>
 
       {open && (
-        <div className="border-t border-dashed border-wireline p-3">
+        <div className="border-t border-wireline p-3">
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
             <div className="relative sm:col-span-2">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -157,7 +157,7 @@ export function GlobalFilters({ className = "", pod = 1 }: { className?: string;
               type="button"
               onClick={() => set("strongFit", !f.strongFit)}
               className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-widest ${
-                f.strongFit ? "border-accent bg-accent/10 text-accent" : "border-dashed border-wireline text-muted-foreground hover:text-foreground"
+                f.strongFit ? "border-accent bg-accent/10 text-accent" : "border-wireline text-muted-foreground hover:text-foreground"
               }`}
             >
               <Flame className="h-3 w-3" /> Strong fit only
@@ -166,7 +166,7 @@ export function GlobalFilters({ className = "", pod = 1 }: { className?: string;
               type="button"
               onClick={() => set("zoho", !f.zoho)}
               className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-widest ${
-                f.zoho ? "border-accent bg-accent/10 text-accent" : "border-dashed border-wireline text-muted-foreground hover:text-foreground"
+                f.zoho ? "border-accent bg-accent/10 text-accent" : "border-wireline text-muted-foreground hover:text-foreground"
               }`}
             >
               <Globe className="h-3 w-3" /> Zoho Deals
@@ -175,7 +175,7 @@ export function GlobalFilters({ className = "", pod = 1 }: { className?: string;
               <button
                 type="button"
                 onClick={() => setF(EMPTY_FILTERS)}
-                className="ml-auto inline-flex items-center gap-1 rounded-md border border-dashed border-wireline px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:border-accent hover:text-accent"
+                className="ml-auto inline-flex items-center gap-1 rounded-md border border-wireline px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:border-accent hover:text-accent"
               >
                 <X className="h-3 w-3" /> Clear
               </button>

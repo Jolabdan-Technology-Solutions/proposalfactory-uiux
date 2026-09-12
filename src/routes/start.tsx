@@ -25,7 +25,7 @@ export const Route = createFileRoute("/start")({
 function StartScreen() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="border-b border-dashed border-wireline px-6 py-5 lg:px-14">
+      <header className="border-b border-wireline px-6 py-5 lg:px-14">
         <Link to="/">
           <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         </Link>
@@ -43,7 +43,7 @@ function StartScreen() {
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
           <Link
             to="/roles"
-            className="group rounded-2xl border border-dashed border-wireline bg-card/50 p-6 transition-colors hover:border-accent"
+            className="group rounded-2xl border border-wireline bg-card/50 p-6 transition-colors hover:border-accent"
           >
             <LogIn className="h-6 w-6 text-accent" aria-hidden />
              <p className="mt-4 text-lg font-bold">Returning User</p>
@@ -58,7 +58,7 @@ function StartScreen() {
 
           <Link
             to="/signup"
-            className="group rounded-2xl border border-dashed border-wireline bg-card/50 p-6 transition-colors hover:border-accent"
+            className="group rounded-2xl border border-wireline bg-card/50 p-6 transition-colors hover:border-accent"
           >
             <UserPlus className="h-6 w-6 text-accent" aria-hidden />
              <p className="mt-4 text-lg font-bold">New User</p>
@@ -71,9 +71,10 @@ function StartScreen() {
             </span>
           </Link>
         </div>
+
       </main>
 
-      <footer className="border-t border-dashed border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
+      <footer className="border-t border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
         © 2026 Mr. B2G &amp; Associates, LLC · The Proposal Factory (TPF)
       </footer>
     </div>

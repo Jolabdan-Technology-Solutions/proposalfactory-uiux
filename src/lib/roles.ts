@@ -32,7 +32,7 @@ export const ROLES: Role[] = [
   {
     id: "platform-owner-admin",
     name: "Platform Owner",
-    who: "Delano — owns the platform",
+    who: "Platform Owner — owns the platform",
     scope: "Whole platform. Nothing is out of reach.",
     tier: 1,
     reach: 100,
@@ -52,7 +52,7 @@ export const ROLES: Role[] = [
   {
     id: "super-admin",
     name: "Super Administrator",
-    who: "Daniel — built the platform",
+    who: "Super Administrator — built the platform",
     scope: "Same reach as the platform owner. The difference is ownership, not access.",
     tier: 1,
     reach: 100,
@@ -71,7 +71,7 @@ export const ROLES: Role[] = [
   {
     id: "subtenant-admin",
     name: "Sub-Tenant Admin",
-    who: "Julie — MTM",
+    who: "Admin User — MTM",
     scope: "One sub-tenant (MTM) and everyone working under it.",
     tier: 2,
     reach: 70,
@@ -109,7 +109,7 @@ export const ROLES: Role[] = [
       "Send work into the approvals queue",
     ],
     hidden: [
-      "Approving their own gates — Julie or an admin decides",
+      "Approving their own gates — Admin User or an admin decides",
       "Adding or removing people",
       "Budgets and organisation-wide audit",
       "Platform settings and reference material",
@@ -139,7 +139,7 @@ export const ROLES: Role[] = [
   {
     id: "subtenant-user",
     name: "Sub-Tenant User",
-    who: "Reggie and others working under MTM",
+    who: "BD User and others working under MTM",
     scope:
       "Business development. Looks up client information to have the conversation — does not write or analyse proposals.",
     tier: 4,

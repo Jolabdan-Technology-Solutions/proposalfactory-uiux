@@ -16,7 +16,7 @@ export const GOALS: Goal[] = [
     blurb: "The full pursuit: find it, decide on it, write it, review it, submit it.",
     pods: [1],
     steps: [
-      "/pipeline",
+      "/discovery",
       "/shaping",
       "/bid-decision",
       "/rfp-intake",
@@ -35,7 +35,7 @@ export const GOALS: Goal[] = [
     title: "Add a new opportunity",
     blurb: "Log an opportunity, research the buyer, and take it to a go / no-go.",
     pods: [1],
-    steps: ["/pipeline", "/shaping", "/bid-decision"],
+    steps: ["/discovery", "/shaping", "/bid-decision"],
   },
   {
     id: "write-response",

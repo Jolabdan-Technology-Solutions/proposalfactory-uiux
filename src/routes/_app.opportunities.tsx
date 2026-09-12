@@ -45,15 +45,15 @@ const stagesFor = (pod: PodId): { id: Stage; label: string }[] =>
 
 const UPLOADS: Record<PodId, { file: string; kind: string; rows: string; by: string; when: string }[]> = {
   1: [
-    { file: "sam-export-sept.csv", kind: "CSV", rows: "1,284 rows", by: "Reggie", when: "3 Sep 2026" },
-    { file: "gdot-forecast-q4.xlsx", kind: "Excel", rows: "312 rows", by: "Julie", when: "1 Sep 2026" },
-    { file: "N00178-25-R-0042.pdf", kind: "PDF", rows: "84 pages", by: "Reggie", when: "28 Aug 2026" },
-    { file: "city-atlanta-bid-list.csv", kind: "CSV", rows: "96 rows", by: "Delano", when: "22 Aug 2026" },
+    { file: "sam-export-sept.csv", kind: "CSV", rows: "1,284 rows", by: "BD User", when: "3 Sep 2026" },
+    { file: "gdot-forecast-q4.xlsx", kind: "Excel", rows: "312 rows", by: "Admin User", when: "1 Sep 2026" },
+    { file: "N00178-25-R-0042.pdf", kind: "PDF", rows: "84 pages", by: "BD User", when: "28 Aug 2026" },
+    { file: "city-atlanta-bid-list.csv", kind: "CSV", rows: "96 rows", by: "Platform Owner", when: "22 Aug 2026" },
   ],
   2: [
     { file: "gala-run-of-show-v3.xlsx", kind: "Excel", rows: "148 rows", by: "Eve", when: "4 Sep 2026" },
-    { file: "summit-venue-quotes.pdf", kind: "PDF", rows: "22 pages", by: "Delano", when: "2 Sep 2026" },
-    { file: "sponsor-pipeline.csv", kind: "CSV", rows: "64 rows", by: "Julie", when: "27 Aug 2026" },
+    { file: "summit-venue-quotes.pdf", kind: "PDF", rows: "22 pages", by: "Platform Owner", when: "2 Sep 2026" },
+    { file: "sponsor-pipeline.csv", kind: "CSV", rows: "64 rows", by: "Admin User", when: "27 Aug 2026" },
     { file: "expo-registration-export.csv", kind: "CSV", rows: "1,902 rows", by: "Eve", when: "20 Aug 2026" },
   ],
   3: [
@@ -106,7 +106,7 @@ function FilterPanel({
     onChange({ ...filters, [k]: v });
 
   return (
-    <details className="group rounded-xl border border-dashed border-wireline bg-card/40">
+    <details className="group rounded-xl border border-wireline bg-card/40">
       <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
         <SlidersHorizontal className="h-4 w-4 text-accent" />
         <span className="text-sm font-bold">Filters</span>
@@ -115,7 +115,7 @@ function FilterPanel({
             {activeCount} active
           </span>
         )}
-        <span className="rounded-full border border-dashed border-wireline px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+        <span className="rounded-full border border-wireline px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
           {resultCount} of {totalCount} {copy.items}
         </span>
         <span className="ml-auto flex items-center gap-2">
@@ -126,7 +126,7 @@ function FilterPanel({
         </span>
       </summary>
 
-      <div className="border-t border-dashed border-wireline px-4 py-4">
+      <div className="border-t border-wireline px-4 py-4">
         {/* Search row */}
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex flex-1 items-center gap-2 rounded-md border border-border bg-background/60 px-3 py-2 min-w-[14rem]">
@@ -258,7 +258,7 @@ function FilterPanel({
           <button
             type="button"
             onClick={() => onChange(EMPTY_FILTERS)}
-            className="ml-auto rounded-md border border-dashed border-wireline px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-accent hover:text-foreground"
+            className="ml-auto rounded-md border border-wireline px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-accent hover:text-foreground"
           >
             Clear all
           </button>
@@ -286,7 +286,7 @@ function ActionIcons({ compact }: { compact?: boolean }) {
           type="button"
           title={a.label}
           aria-label={a.label}
-          className="rounded-md border border-dashed border-wireline p-1.5 text-muted-foreground transition-colors hover:border-accent hover:text-accent"
+          className="rounded-md border border-wireline p-1.5 text-muted-foreground transition-colors hover:border-accent hover:text-accent"
         >
           <a.icon className={compact ? "h-3 w-3" : "h-3.5 w-3.5"} />
         </button>
@@ -301,7 +301,7 @@ function BoardView({ opps, pod }: { opps: Opp[]; pod: PodId }) {
       {stagesFor(pod).map((st) => {
         const items = opps.filter((o) => o.stage === st.id);
         return (
-          <div key={st.id} className="rounded-xl border border-dashed border-wireline bg-card/40 p-3">
+          <div key={st.id} className="rounded-xl border border-wireline bg-card/40 p-3">
             <div className="flex items-center justify-between gap-2">
               <p className="truncate text-xs font-bold">{st.label}</p>
               <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
@@ -321,13 +321,21 @@ function BoardView({ opps, pod }: { opps: Opp[]; pod: PodId }) {
                     <span className="font-mono text-[10px] text-accent">Score {o.score}</span>
                     <span className="font-mono text-[10px] text-muted-foreground">Due {o.due} Oct</span>
                   </div>
-                  <div className="mt-2 border-t border-dashed border-wireline pt-2">
+                  {o.stage === "won" && (
+                    <Link
+                      to="/won-proposals"
+                      className="mt-2 flex items-center gap-1 rounded-md border border-pod-2/40 bg-pod-2/10 px-2 py-1 font-mono text-[10px] text-pod-2 hover:bg-pod-2/20"
+                    >
+                      Sent to Pod 2 · Won Proposals →
+                    </Link>
+                  )}
+                  <div className="mt-2 border-t border-wireline pt-2">
                     <ActionIcons compact />
                   </div>
                 </div>
               ))}
               {items.length === 0 && (
-                <div className="rounded-lg border border-dashed border-wireline py-6 text-center font-mono text-[10px] text-muted-foreground">
+                <div className="rounded-lg border border-wireline py-6 text-center font-mono text-[10px] text-muted-foreground">
                   Drop here
                 </div>
               )}
@@ -502,7 +510,7 @@ function DirectoryView({ pod }: { pod: PodId }) {
             </div>
             <button
               type="button"
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-dashed border-wireline px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-accent hover:text-accent"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-wireline px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-accent hover:text-accent"
             >
               <Download className="h-3.5 w-3.5" /> Download
             </button>
@@ -545,28 +553,23 @@ function Opportunities() {
         </div>
         <h1 className="mt-2 text-3xl font-extrabold tracking-tight">{copy.boardTitle}</h1>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{copy.boardBlurb}</p>
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {([1, 2, 3] as PodId[]).map((p) => (
-            <Link
-              key={p}
-              to="/opportunities"
-              search={{ pod: p }}
-              className={
-                "rounded-full border px-3 py-1 font-mono text-[10px] transition-colors " +
-                (p === pod
-                  ? "border-accent bg-accent/15 text-accent"
-                  : "border-dashed border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground")
-              }
-            >
-              {POD_COPY[p].boardTitle}
-            </Link>
-          ))}
-        </div>
-        <div className="mt-4 border-b border-dashed border-wireline" />
+        <div className="mt-4 border-b border-wireline" />
       </header>
 
 
-      <div className="mb-4 flex flex-wrap items-center gap-1 border-b border-border">
+      {/* Collapsible filter panel — starts collapsed, expand to filter */}
+      <div className="mb-4">
+        <FilterPanel
+          filters={filters}
+          onChange={setFilters}
+          resultCount={filtered.length}
+          totalCount={opps.length}
+          pod={pod}
+        />
+      </div>
+
+      {/* View tabs sit directly above the table */}
+      <div className="flex flex-wrap items-center gap-1 border-b border-border">
         {VIEWS.map((v) => (
           <button
             key={v.id}
@@ -585,19 +588,8 @@ function Opportunities() {
         ))}
       </div>
 
-      {/* Collapsible filter panel — starts collapsed, expand to filter */}
-      <div className="mb-4">
-        <FilterPanel
-          filters={filters}
-          onChange={setFilters}
-          resultCount={filtered.length}
-          totalCount={opps.length}
-          pod={pod}
-        />
-      </div>
-
       {/* Table title sits directly above its own table, not inside the filters */}
-      <h2 className="mb-1 text-sm font-bold">
+      <h2 className="mt-3 mb-1 text-sm font-bold">
         {view === "board"
           ? `${copy.boardTitle} · board`
           : view === "calendar"
@@ -612,6 +604,7 @@ function Opportunities() {
       <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
         {active.hint}
       </p>
+
 
 
       {view === "board" && <BoardView opps={filtered} pod={pod} />}

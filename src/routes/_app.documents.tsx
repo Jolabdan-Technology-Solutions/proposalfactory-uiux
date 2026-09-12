@@ -39,8 +39,8 @@ type Doc = {
 };
 
 const DOCS: Doc[] = [
-  { id: "D-1001", name: "Proposal Factory — Onboarding Guide.pdf", category: "Training", type: "PDF", size: "4.2 MB", owner: "Daniel M.", relatedTo: "Platform", uploaded: "2026-08-14" },
-  { id: "D-1002", name: "Sylvia Intake Walkthrough.mp4", category: "Training", type: "MP4", size: "128 MB", owner: "Daniel M.", relatedTo: "Platform", uploaded: "2026-08-14" },
+  { id: "D-1001", name: "Proposal Factory — Onboarding Guide.pdf", category: "Training", type: "PDF", size: "4.2 MB", owner: "Super Administrator M.", relatedTo: "Platform", uploaded: "2026-08-14" },
+  { id: "D-1002", name: "Sylvia Intake Walkthrough.mp4", category: "Training", type: "MP4", size: "128 MB", owner: "Super Administrator M.", relatedTo: "Platform", uploaded: "2026-08-14" },
   { id: "D-1003", name: "Capture Manager Playbook.docx", category: "Training", type: "DOCX", size: "1.1 MB", owner: "Alicia R.", relatedTo: "Pod 1", uploaded: "2026-07-30" },
   { id: "D-1004", name: "Pipeline Import — August.csv", category: "Opportunities", type: "CSV", size: "312 KB", owner: "System", relatedTo: "Pipeline", uploaded: "2026-09-01" },
   { id: "D-1005", name: "Opportunity Brief — USACE Facilities.pdf", category: "Opportunities", type: "PDF", size: "880 KB", owner: "Alicia R.", relatedTo: "OPP-2214", uploaded: "2026-08-28" },
@@ -54,7 +54,7 @@ const DOCS: Doc[] = [
   { id: "D-1013", name: "Past Performance — VA Region 4.pdf", category: "Past performance", type: "PDF", size: "2.3 MB", owner: "Library", relatedTo: "CPARS", uploaded: "2026-03-08" },
   { id: "D-1014", name: "Award Notice — GSA 47QT.pdf", category: "Contracts & awards", type: "PDF", size: "410 KB", owner: "Back Office", relatedTo: "OPP-1987", uploaded: "2026-06-19" },
   { id: "D-1015", name: "Signed Subcontract — Atlas Defense.pdf", category: "Contracts & awards", type: "PDF", size: "1.2 MB", owner: "Back Office", relatedTo: "OPP-1987", uploaded: "2026-06-25" },
-  { id: "D-1016", name: "Data Handling & Privacy Policy.pdf", category: "Compliance & policy", type: "PDF", size: "560 KB", owner: "Daniel M.", relatedTo: "Platform", uploaded: "2026-02-02" },
+  { id: "D-1016", name: "Data Handling & Privacy Policy.pdf", category: "Compliance & policy", type: "PDF", size: "560 KB", owner: "Super Administrator M.", relatedTo: "Platform", uploaded: "2026-02-02" },
   { id: "D-1017", name: "Capability Statement (2026).pptx", category: "Uploads (misc.)", type: "PPTX", size: "6.8 MB", owner: "Marketing", relatedTo: "Company", uploaded: "2026-04-17" },
   { id: "D-1018", name: "Scanned Vendor Forms.pdf", category: "Uploads (misc.)", type: "PDF", size: "3.1 MB", owner: "Alicia R.", relatedTo: "Company", uploaded: "2026-07-02" },
 ];

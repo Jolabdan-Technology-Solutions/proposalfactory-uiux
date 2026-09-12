@@ -44,7 +44,7 @@ const HIGHLIGHTS = [
 function SplashScreen() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="flex items-center justify-between gap-4 border-b border-dashed border-wireline px-6 py-5 lg:px-14">
+      <header className="flex items-center justify-between gap-4 border-b border-wireline px-6 py-5 lg:px-14">
         <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         <Link
           to="/start"
@@ -80,7 +80,7 @@ function SplashScreen() {
           {HIGHLIGHTS.map((h) => (
             <div
               key={h.title}
-              className="rounded-2xl border border-dashed border-wireline bg-card/40 p-6"
+              className="rounded-2xl border border-wireline bg-card/40 p-6"
             >
               <h.icon className="h-6 w-6 text-accent" aria-hidden />
               <p className="mt-4 text-base font-bold">{h.title}</p>
@@ -89,7 +89,7 @@ function SplashScreen() {
           ))}
         </section>
 
-        <section className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-dashed border-wireline bg-card/40 p-6">
+        <section className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-wireline bg-card/40 p-6">
           <div className="flex items-start gap-3">
             <HelpCircle className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden />
             <div>
@@ -101,7 +101,7 @@ function SplashScreen() {
           </div>
           <Link
             to="/help"
-            className="inline-flex items-center gap-2 rounded-xl border border-dashed border-wireline px-5 py-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground transition-colors hover:border-accent hover:text-foreground"
+            className="inline-flex items-center gap-2 rounded-xl border border-wireline px-5 py-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground transition-colors hover:border-accent hover:text-foreground"
           >
             Ask Sylvia <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -117,7 +117,7 @@ function SplashScreen() {
         </div>
       </main>
 
-      <footer className="flex flex-wrap items-center justify-center gap-2 border-t border-dashed border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground">
+      <footer className="flex flex-wrap items-center justify-center gap-2 border-t border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground">
         <span>© 2026 Mr. B2G &amp; Associates, LLC · The Proposal Factory (TPF)</span>
       </footer>
     </div>

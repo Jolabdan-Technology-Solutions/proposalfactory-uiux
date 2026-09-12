@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { Deal, PodId } from "@/lib/deals";
 import { POD_COPY, STAGE_LABELS, money } from "@/lib/deals";
+import { bandFor } from "@/lib/scorecard";
 
 /** Shared read-only table of pipeline deals used by the filter bar and pipeline page. */
 export function DealTable({
@@ -17,7 +18,7 @@ export function DealTable({
 
   if (deals.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-wireline px-4 py-10 text-center">
+      <div className="rounded-xl border border-wireline px-4 py-10 text-center">
         <p className="text-sm font-semibold">No {copy.items} match these filters</p>
         <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
           Widen a filter or clear them to see everything
@@ -53,20 +54,42 @@ export function DealTable({
             <span className="truncate text-muted-foreground">{d.subClient}</span>
             <span className="truncate font-mono text-[10px] text-muted-foreground">{d.setAside}</span>
             <span className="font-mono text-[10px]">{d.due} Oct</span>
+            <span className="min-w-0">
+              <span
+                className={
+                  "block font-mono text-[10px] " +
+                  (d.score >= 70 ? "text-accent" : "text-muted-foreground")
+                }
+              >
+                {d.score}
+              </span>
+              {pod === 1 && (
+                <span
+                  className="block truncate font-mono text-[9px] text-muted-foreground"
+                  title={bandFor(d.score).meaning}
+                >
+                  {bandFor(d.score).label}
+                </span>
+              )}
+            </span>
             <span
               className={
-                "font-mono text-[10px] " + (d.score >= 70 ? "text-accent" : "text-muted-foreground")
+                "truncate rounded-md border px-2 py-0.5 font-mono text-[10px] " +
+                (d.stage === "won"
+                  ? "border-pod-2/50 bg-pod-2/10 text-pod-2"
+                  : d.stage === "lost"
+                    ? "border-wireline bg-secondary/40 text-muted-foreground"
+                    : "border-accent/40 bg-accent/10 text-accent")
               }
+              title={d.stage === "won" ? "Won — sent to Pod 2 automatically" : undefined}
             >
-              {d.score}
-            </span>
-            <span className="truncate rounded-md border border-accent/40 bg-accent/10 px-2 py-0.5 font-mono text-[10px] text-accent">
               {STAGE_LABELS[d.stage]}
+              {d.stage === "won" ? " → Pod 2" : ""}
             </span>
           </div>
         ))}
         {limit && deals.length > rows.length && (
-          <div className="border-t border-dashed border-wireline px-4 py-2.5 text-center">
+          <div className="border-t border-wireline px-4 py-2.5 text-center">
             <Link
               to="/pipeline"
               search={{ pod }}

@@ -50,7 +50,7 @@ function Orientation() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-dashed border-wireline px-6 py-5 lg:px-14">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-wireline px-6 py-5 lg:px-14">
         <Link to="/start" className="min-w-0">
           <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         </Link>
@@ -84,7 +84,7 @@ function Orientation() {
             type="button"
             onClick={() => setI((n) => Math.max(0, n - 1))}
             disabled={i === 0}
-            className="inline-flex items-center gap-2 rounded-lg border border-dashed border-wireline px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+            className="inline-flex items-center gap-2 rounded-lg border border-wireline px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back
           </button>
@@ -133,7 +133,7 @@ function Orientation() {
         </Link>
       </main>
 
-      <footer className="border-t border-dashed border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
+      <footer className="border-t border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
         © 2026 Mr. B2G &amp; Associates, LLC · The Proposal Factory (TPF)
       </footer>
     </div>

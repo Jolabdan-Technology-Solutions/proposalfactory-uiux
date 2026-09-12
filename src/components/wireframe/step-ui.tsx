@@ -1,6 +1,7 @@
 import { Check, Download, FileText, Play, RefreshCw, Search, Upload, X } from "lucide-react";
 import type { SubStep } from "@/lib/workflow";
 import { GateBadge } from "@/components/wireframe/primitives";
+import { Button } from "@/components/ui/button";
 
 /**
  * Renders a mock of the screen a user actually sees for a given step,
@@ -40,25 +41,33 @@ function Btn({
   children,
   tone = "ghost",
   icon: Icon,
+  onClick,
+  disabled,
 }: {
   children: React.ReactNode;
   tone?: "primary" | "accent" | "ghost" | "danger";
   icon?: React.ComponentType<{ className?: string }>;
+  onClick?: (() => void) | undefined;
+  disabled?: boolean | undefined;
 }) {
   const tones = {
     primary: "bg-primary text-primary-foreground",
     accent: "border border-accent bg-accent/10 text-accent",
-    ghost: "border border-dashed border-wireline text-muted-foreground",
+    ghost: "border border-wireline text-muted-foreground",
     danger: "border border-destructive/60 text-destructive",
   } as const;
   return (
-    <button
+    <Button
       type="button"
-      className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-80 ${tones[tone]}`}
+      size="sm"
+      variant="ghost"
+      onClick={onClick}
+      disabled={disabled}
+      className={`h-auto px-3 py-1.5 text-xs transition-opacity hover:opacity-80 ${tones[tone]}`}
     >
       {Icon && <Icon className="h-3.5 w-3.5" />}
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -84,7 +93,19 @@ const ROWS = [
   ["State DOT Signage", "SLED-2025-114", "39", "Low fit"],
 ];
 
-function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
+function StepBody({
+  kind,
+  step,
+  onComplete,
+  onGateDecision,
+  outcome,
+}: {
+  kind: Kind;
+  step: SubStep;
+  onComplete?: (() => void) | undefined;
+  onGateDecision?: ((decision: "approved" | "changes" | "declined") => void) | undefined;
+  outcome?: string | undefined;
+}) {
   switch (kind) {
     case "gate":
       return (
@@ -106,20 +127,25 @@ function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
             <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Your comment
             </p>
-            <div className="mt-1 h-16 rounded-md border border-dashed border-wireline bg-background/60" />
+            <div className="mt-1 h-16 rounded-md border border-wireline bg-background/60" />
           </div>
           <div className="flex flex-wrap gap-2">
-            <Btn tone="primary" icon={Check}>Approve</Btn>
-            <Btn tone="accent" icon={RefreshCw}>Request changes</Btn>
-            <Btn tone="danger" icon={X}>Decline</Btn>
+            <Btn tone="primary" icon={Check} onClick={() => onGateDecision?.("approved")}>Approve</Btn>
+            <Btn tone="accent" icon={RefreshCw} onClick={() => onGateDecision?.("changes")}>Request changes</Btn>
+            <Btn tone="danger" icon={X} onClick={() => onGateDecision?.("declined")}>Decline</Btn>
           </div>
+          {outcome && (
+            <p className="rounded-md border border-wireline px-3 py-2 text-xs text-muted-foreground" role="status">
+              {outcome}
+            </p>
+          )}
         </div>
       );
     case "run":
       return (
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Btn tone="primary" icon={Play}>Run now</Btn>
+            <Btn tone="primary" icon={Play} onClick={onComplete}>Run now</Btn>
             <Btn icon={RefreshCw}>Schedule</Btn>
             <span className="ml-auto font-mono text-[10px] text-muted-foreground">
               Last run 09:12 · 128 records
@@ -143,6 +169,7 @@ function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
             <Field label="Duplicates removed" value="34" />
             <Field label="Errors" value="0" />
           </div>
+          {outcome && <p className="text-xs font-semibold text-accent" role="status">{outcome}</p>}
         </div>
       );
     case "table":
@@ -154,6 +181,7 @@ function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
               <span className="text-xs text-muted-foreground">Search or filter…</span>
             </div>
             <Btn icon={Download}>Download report</Btn>
+            <Btn tone="primary" icon={Check} onClick={onComplete}>Continue</Btn>
           </div>
           <div className="overflow-hidden rounded-lg border border-border">
             <div className="grid grid-cols-[2fr_1.4fr_0.6fr_0.9fr] gap-2 border-b border-border bg-secondary/40 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -185,7 +213,7 @@ function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
             ))}
             <span className="ml-auto flex gap-2">
               <Btn tone="accent" icon={RefreshCw}>Regenerate draft</Btn>
-              <Btn icon={Check}>Save</Btn>
+              <Btn icon={Check} onClick={onComplete}>Save and continue</Btn>
             </span>
           </div>
           <div className="space-y-2.5 rounded-lg border border-border p-5">
@@ -211,7 +239,7 @@ function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Btn icon={Upload}>Attach files</Btn>
-            <Btn tone="primary" icon={Check}>Save and continue</Btn>
+            <Btn tone="primary" icon={Check} onClick={onComplete}>Save and continue</Btn>
           </div>
         </div>
       );
@@ -241,7 +269,7 @@ function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
             </div>
           ))}
           <div className="flex gap-2">
-            <Btn tone="primary" icon={Check}>Mark reviewed</Btn>
+            <Btn tone="primary" icon={Check} onClick={onComplete}>Mark reviewed</Btn>
             <Btn icon={Download}>Download findings</Btn>
           </div>
         </div>
@@ -260,7 +288,7 @@ function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
             ),
           )}
           <div className="flex flex-wrap gap-2">
-            <Btn tone="primary" icon={Check}>Lock package</Btn>
+            <Btn tone="primary" icon={Check} onClick={onComplete}>Lock package</Btn>
             <Btn icon={Download}>Download all</Btn>
           </div>
         </div>
@@ -276,13 +304,23 @@ function StepBody({ kind, step }: { kind: Kind; step: SubStep }) {
           <div className="space-y-2 rounded-lg border border-border p-4">
             <Bar w="92%" /><Bar w="78%" dim /><Bar w="85%" dim />
           </div>
-          <Btn tone="primary" icon={Check}>Continue</Btn>
+          <Btn tone="primary" icon={Check} onClick={onComplete}>Continue</Btn>
         </div>
       );
   }
 }
 
-export function StepUI({ step }: { step: SubStep }) {
+export function StepUI({
+  step,
+  onComplete,
+  onGateDecision,
+  outcome,
+}: {
+  step: SubStep;
+  onComplete?: (() => void) | undefined;
+  onGateDecision?: ((decision: "approved" | "changes" | "declined") => void) | undefined;
+  outcome?: string | undefined;
+}) {
   const kind = kindFor(step);
   return (
     <div className="rounded-xl border border-border bg-card/60">
@@ -301,7 +339,13 @@ export function StepUI({ step }: { step: SubStep }) {
         </span>
       </div>
       <div className="p-5">
-        <StepBody kind={kind} step={step} />
+        <StepBody
+          kind={kind}
+          step={step}
+          onComplete={onComplete}
+          onGateDecision={onGateDecision}
+          outcome={outcome}
+        />
       </div>
     </div>
   );
