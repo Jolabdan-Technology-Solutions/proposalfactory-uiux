@@ -96,11 +96,11 @@ const ROWS: Row[] = [
 type SortKey = "name" | "code" | "agency" | "vertical" | "due" | "fit" | "subClient" | "priority";
 
 const COLUMNS: { key: SortKey; label: string; className: string }[] = [
-  { key: "name", label: "Pipeline opportunity", className: "min-w-[220px] flex-[2]" },
-  { key: "agency", label: "Agency / vertical", className: "min-w-[180px] flex-1" },
-  { key: "due", label: "Due", className: "w-28 shrink-0" },
-  { key: "fit", label: "Fit / ICP / GNG", className: "w-32 shrink-0" },
-  { key: "subClient", label: "Mapped sub-client", className: "min-w-[220px] flex-[1.5]" },
+  { key: "name", label: "Pipeline opportunity", className: "min-w-[150px] flex-[2]" },
+  { key: "agency", label: "Agency / vertical", className: "min-w-[130px] flex-1" },
+  { key: "due", label: "Due", className: "w-24 shrink-0" },
+  { key: "fit", label: "Fit / ICP / GNG", className: "w-28 shrink-0" },
+  { key: "subClient", label: "Mapped sub-client", className: "min-w-[150px] flex-[1.5]" },
   { key: "priority", label: "Pri", className: "w-12 shrink-0" },
 ];
 
@@ -108,8 +108,8 @@ function prioTone(p: Row["priority"]) {
   switch (p) {
     case "P1": return "border-accent/60 bg-accent/15 text-accent";
     case "P2": return "border-border bg-secondary text-secondary-foreground";
-    case "P3": return "border-dashed border-wireline text-muted-foreground";
-    default: return "border-dashed border-wireline text-muted-foreground";
+    case "P3": return "border-wireline text-muted-foreground";
+    default: return "border-wireline text-muted-foreground";
   }
 }
 
@@ -244,9 +244,235 @@ function Field({ label, value }: { label: string; value: string }) {
   );
 }
 
+/* ------------------------------------------------- research (sample) ---- */
+
+type ResearchResult = {
+  fit: number;
+  icp: number;
+  gng: "Go" | "No-Go" | "Hold / Shape";
+  value: string;
+  incumbent: string;
+  competitors: number;
+  summary: string;
+  sources: { label: string; detail: string }[];
+  signals: { label: string; verdict: string; good: boolean }[];
+};
+
+const RESEARCH_STAGES = [
+  "Searching SAM.gov, agency forecasts and award history…",
+  "Reading the notice, attachments and NAICS history…",
+  "Matching against sub-client capability and past performance…",
+  "Scoring fit, ICP and drafting a Go / No-Go recommendation…",
+];
+
+/** Deterministic sample findings — no live systems are called. */
+function buildResearch(r: Row): ResearchResult {
+  const seed = r.code.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  // Rows already scored keep the scores the board shows.
+  const scored = r.gng !== "—";
+  const fit = scored ? r.fit : 35 + (seed % 60);
+  const icp = scored ? r.icp : 30 + ((seed * 7) % 65);
+  const avg = (fit + icp) / 2;
+  const gng: ResearchResult["gng"] = scored
+    ? (r.gng as "Go" | "No-Go")
+    : avg >= 68
+      ? "Go"
+      : avg >= 48
+        ? "Hold / Shape"
+        : "No-Go";
+
+  const competitors = 3 + (seed % 9);
+  const incumbent = seed % 3 === 0 ? "None found — new requirement" : "Incumbent detected on prior award";
+  const valueM = (0.3 + ((seed % 40) / 10)).toFixed(1);
+  return {
+    fit,
+    icp,
+    gng,
+    value: `$${valueM}M est.`,
+    incumbent,
+    competitors,
+    summary:
+      gng === "Go"
+        ? `Strong alignment with ${r.subClient}. Set-aside (${r.setAside}) matches, the agency buys this repeatedly, and the timeline is workable.`
+        : gng === "Hold / Shape"
+          ? `Partial alignment with ${r.subClient}. Worth shaping — capability gap on part of the scope and the due date is tight.`
+          : `Weak alignment with ${r.subClient}. Set-aside and past performance do not line up, and the field is crowded.`,
+    sources: [
+      { label: "Source platform", detail: r.source },
+      { label: "Agency", detail: r.agency },
+      { label: "Solicitation", detail: r.code },
+      { label: "Set-aside", detail: r.setAside },
+      { label: "Response due", detail: new Date(r.due).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) },
+      { label: "Award history", detail: `${1 + (seed % 6)} similar awards in 36 months` },
+    ],
+    signals: [
+      { label: "Set-aside eligibility", verdict: r.setAside === "None" ? "Full & open — no advantage" : `${r.setAside} — eligible`, good: r.setAside !== "None" },
+      { label: "Capability match", verdict: fit >= 60 ? "Covered by current NAICS" : "Partial gap — teaming likely", good: fit >= 60 },
+      { label: "Past performance", verdict: icp >= 55 ? "Relevant references on file" : "Thin references for this scope", good: icp >= 55 },
+      { label: "Competition", verdict: `${competitors} likely bidders`, good: competitors <= 6 },
+      { label: "Timeline", verdict: seed % 2 === 0 ? "Adequate runway" : "Tight — under 3 weeks", good: seed % 2 === 0 },
+    ],
+  };
+}
+
+function ResearchModal({
+  row,
+  stage,
+  result,
+  onClose,
+}: {
+  row: Row;
+  stage: number;
+  result: ResearchResult | null;
+  onClose: () => void;
+}) {
+  const tone =
+    result?.gng === "Go"
+      ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/40"
+      : result?.gng === "No-Go"
+        ? "bg-destructive/15 text-destructive border-destructive/40"
+        : "bg-accent/15 text-accent border-accent/40";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm">
+      <div className="max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-border bg-card p-5 shadow-xl">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-bold">Pre-Award Intelligence — {row.name}</h3>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Results from the Research Analyst and Go / No-Go agents.
+            </p>
+            <p className="mt-1 font-mono text-[10px] text-accent">
+              Sample data · no live systems connected in this wireframe
+            </p>
+          </div>
+          <button onClick={onClose} className="rounded-md p-1 text-muted-foreground hover:text-foreground" aria-label="Close">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {!result ? (
+          <div className="rounded-lg border border-wireline p-5">
+            <div className="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+              <div
+                className="h-full rounded-full bg-accent transition-all duration-500"
+                style={{ width: `${((stage + 1) / RESEARCH_STAGES.length) * 100}%` }}
+              />
+            </div>
+            <ul className="space-y-1.5">
+              {RESEARCH_STAGES.map((s, i) => (
+                <li
+                  key={s}
+                  className={
+                    "font-mono text-[11px] " +
+                    (i < stage ? "text-muted-foreground line-through" : i === stage ? "text-accent" : "text-muted-foreground/50")
+                  }
+                >
+                  {i < stage ? "✓ " : i === stage ? "▸ " : "· "}
+                  {s}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-widest ${tone}`}>
+                {result.gng}
+              </span>
+              <span className="font-mono text-[10px] text-muted-foreground">Fit {result.fit}</span>
+              <span className="font-mono text-[10px] text-muted-foreground">ICP {result.icp}</span>
+              <span className="font-mono text-[10px] text-muted-foreground">{result.value}</span>
+            </div>
+
+            <p className="text-xs leading-relaxed text-foreground">{result.summary}</p>
+
+            <div className="rounded-lg border border-border p-3">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Source information
+              </p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                {result.sources.map((s) => (
+                  <div key={s.label}>
+                    <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">{s.label}</p>
+                    <p className="text-xs">{s.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-border p-3">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                What the research found
+              </p>
+              <ul className="space-y-1.5">
+                {result.signals.map((s) => (
+                  <li key={s.label} className="flex items-start gap-2 text-xs">
+                    <span className={s.good ? "text-emerald-400" : "text-destructive"}>{s.good ? "✓" : "✕"}</span>
+                    <span className="text-muted-foreground">
+                      <strong className="text-foreground">{s.label}</strong> — {s.verdict}
+                    </span>
+                  </li>
+                ))}
+                <li className="flex items-start gap-2 text-xs">
+                  <span className="text-muted-foreground">·</span>
+                  <span className="text-muted-foreground">
+                    <strong className="text-foreground">Incumbency</strong> — {result.incumbent}
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <button
+                onClick={onClose}
+                className="rounded-md border border-wireline px-3 py-1.5 font-mono text-[10px] text-muted-foreground hover:border-accent hover:text-accent"
+              >
+                Close
+              </button>
+              <Link
+                to="/bid-decision"
+                className="rounded-md bg-primary px-3 py-1.5 font-mono text-[10px] font-semibold text-primary-foreground hover:opacity-90"
+              >
+                {result.gng === "Go" ? "Take to Go / No-Go gate" : "Bid anyway (Hold / Shape)"}
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* --------------------------------------------------------------- page ---- */
 
 function SubClientMapping() {
+  const [research, setResearch] = useState<{ row: Row; stage: number } | null>(null);
+  const [results, setResults] = useState<Record<string, ResearchResult>>({});
+
+  function runResearch(row: Row) {
+    // Already scored, or researched earlier in this session — show findings at once.
+    if (results[row.id] || row.gng !== "—") {
+      if (!results[row.id]) setResults((prev) => ({ ...prev, [row.id]: buildResearch(row) }));
+      setResearch({ row, stage: RESEARCH_STAGES.length });
+      return;
+    }
+    setResearch({ row, stage: 0 });
+
+    let i = 0;
+    const tick = window.setInterval(() => {
+      i += 1;
+      if (i >= RESEARCH_STAGES.length) {
+        window.clearInterval(tick);
+        setResults((prev) => ({ ...prev, [row.id]: buildResearch(row) }));
+        setResearch({ row, stage: RESEARCH_STAGES.length });
+      } else {
+        setResearch({ row, stage: i });
+      }
+    }, 750);
+  }
+
+
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [q, setQ] = useState("");
@@ -326,7 +552,7 @@ function SubClientMapping() {
         <p className="mt-1 font-mono text-xs text-muted-foreground">
           Agent: RBAC Manager · capability matches, pins and visibility scope per sub-client
         </p>
-        <div className="mt-4 border-b border-dashed border-wireline" />
+        <div className="mt-4 border-b border-wireline" />
       </header>
 
       {/* ── Mapped sub-clients filter — collapsible on its own ── */}
@@ -346,7 +572,7 @@ function SubClientMapping() {
             <button
               type="button"
               onClick={clearFilters}
-              className="ml-auto inline-flex items-center gap-1 rounded-md border border-dashed border-wireline px-2 py-1 font-mono text-[10px] text-muted-foreground hover:border-accent hover:text-accent"
+              className="ml-auto inline-flex items-center gap-1 rounded-md border border-wireline px-2 py-1 font-mono text-[10px] text-muted-foreground hover:border-accent hover:text-accent"
             >
               <X className="h-3 w-3" /> Clear
             </button>
@@ -396,7 +622,7 @@ function SubClientMapping() {
               onClick={() => setStrongFit((s) => !s)}
               className={
                 "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-2 font-mono text-[10px] transition-colors " +
-                (strongFit ? "border-accent bg-accent/15 text-accent" : "border-dashed border-wireline text-muted-foreground hover:border-accent/60")
+                (strongFit ? "border-accent bg-accent/15 text-accent" : "border-wireline text-muted-foreground hover:border-accent/60")
               }
             >
               <Flame className="h-3.5 w-3.5" /> Strong fit only
@@ -406,7 +632,7 @@ function SubClientMapping() {
               onClick={() => setZoho((s) => !s)}
               className={
                 "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-2 font-mono text-[10px] transition-colors " +
-                (zoho ? "border-accent bg-accent/15 text-accent" : "border-dashed border-wireline text-muted-foreground hover:border-accent/60")
+                (zoho ? "border-accent bg-accent/15 text-accent" : "border-wireline text-muted-foreground hover:border-accent/60")
               }
             >
               <Globe className="h-3.5 w-3.5" /> Zoho Deals
@@ -423,7 +649,7 @@ function SubClientMapping() {
           <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
           {sorted.length} of {ROWS.length} mapped opportunities
         </summary>
-      <div className="overflow-hidden rounded-xl border border-border">
+      <div className="overflow-x-auto rounded-xl border border-border">
 
         <div className="flex items-center gap-2 border-b border-border bg-secondary/40 px-4 py-2.5">
           {COLUMNS.map((c) => {
@@ -463,49 +689,66 @@ function SubClientMapping() {
             </button>
           </div>
         ) : (
-          sorted.map((r) => (
+          sorted.map((r) => {
+            const res = results[r.id];
+            const done = Boolean(res) || r.gng !== "—";
+            const busy = research?.row.id === r.id && !res;
+
+            return (
             <div
               key={r.id}
               className="flex items-center gap-2 border-b border-border px-4 py-3 text-xs last:border-0 hover:bg-secondary/30"
             >
               {/* Pipeline opportunity */}
-              <div className={"min-w-[220px] flex-[2]"}>
+              <div className={"min-w-[150px] flex-[2]"}>
                 <div className="flex items-center gap-2">
                   <span className="truncate font-semibold text-foreground">{r.name}</span>
-                  <button title="Run research agent" className="shrink-0 rounded-md border border-dashed border-wireline px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground hover:border-accent hover:text-accent">
-                    Run Research
+                  <button
+                    type="button"
+                    title={done ? "View research findings" : "Run research agent"}
+                    onClick={() => runResearch(r)}
+                    className={
+                      "shrink-0 rounded-md border px-1.5 py-0.5 font-mono text-[9px] transition-colors " +
+                      (done
+                        ? "border-accent/50 text-accent hover:border-accent"
+                        : "border-wireline text-muted-foreground hover:border-accent hover:text-accent")
+                    }
+                  >
+                    {busy ? "Researching…" : done ? "Researched ✓ · View" : "Run Research"}
                   </button>
+
                 </div>
                 <span className="font-mono text-[10px] text-muted-foreground">{r.code}</span>
               </div>
               {/* Agency / vertical */}
-              <div className={"min-w-[180px] flex-1"}>
+              <div className={"min-w-[130px] flex-1"}>
                 <p className="truncate">{r.agency}</p>
                 <span className="font-mono text-[9px] uppercase tracking-widest text-accent">
                   {r.vertical}
                 </span>
               </div>
               {/* Due */}
-              <div className="w-28 shrink-0">
+              <div className="w-24 shrink-0">
                 <p>{new Date(r.due).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p>
               </div>
               {/* Fit / ICP / GNG */}
-              <div className="flex w-32 shrink-0 items-center gap-2">
+              <div className="flex w-28 shrink-0 items-center gap-2">
                 <span className="inline-flex items-center gap-1">
-                  <span className={`inline-block h-2 w-2 rounded-full ${fitDot(r.fit)}`} />
-                  <span className="font-mono text-[10px] text-muted-foreground">{r.fit}</span>
+                  <span className={`inline-block h-2 w-2 rounded-full ${fitDot(res?.fit ?? r.fit)}`} />
+                  <span className="font-mono text-[10px] text-muted-foreground">{res?.fit ?? r.fit}</span>
                 </span>
                 <span className="inline-flex items-center gap-1">
-                  <span className={`inline-block h-2 w-2 rounded-full ${fitDot(r.icp)}`} />
-                  <span className="font-mono text-[10px] text-muted-foreground">{r.icp}</span>
+                  <span className={`inline-block h-2 w-2 rounded-full ${fitDot(res?.icp ?? r.icp)}`} />
+                  <span className="font-mono text-[10px] text-muted-foreground">{res?.icp ?? r.icp}</span>
                 </span>
-                <span className="font-mono text-[10px] text-muted-foreground">{r.gng}</span>
+                <span className="font-mono text-[10px] text-muted-foreground">{res?.gng ?? r.gng}</span>
               </div>
+
               {/* Mapped sub-client */}
-              <div className={"min-w-[220px] flex-[1.5]"}>
+              <div className={"min-w-[150px] flex-[1.5]"}>
                 <p className="truncate font-medium">{r.subClient}</p>
                 <div className="mt-0.5 flex items-center gap-1.5">
-                  <span className="rounded-full border border-dashed border-wireline px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground">
+                  <span className="rounded-full border border-wireline px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground">
                     {r.status}
                   </span>
                 </div>
@@ -520,29 +763,32 @@ function SubClientMapping() {
               <div className="flex w-56 shrink-0 flex-wrap items-center justify-end gap-1">
                 <Link
                   to="/bulk-edit"
-                  className="rounded-md border border-dashed border-wireline px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground hover:border-accent hover:text-accent"
+                  className="rounded-md border border-wireline px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground hover:border-accent hover:text-accent"
                 >
                   Bulk Edit
                 </Link>
-                {r.gng !== "Go" && (
+                {(!done || (res?.gng ?? r.gng) !== "Go") && (
                   <Link
                     to="/bid-decision"
-                    className="rounded-md border border-dashed border-wireline px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground hover:border-accent hover:text-accent"
+                    className="rounded-md border border-wireline px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground hover:border-accent hover:text-accent"
                   >
                     Go / No-Go
                   </Link>
                 )}
-                {r.gng === "Go" && (
+                {done && (res?.gng ?? r.gng) === "Go" && (
                   <Link
-                    to="/shaping"
+                    to="/rfp-intake"
+                    title="Go / No-Go approved — start the proposal by uploading the RFP (step 19)"
                     className="rounded-md bg-primary px-1.5 py-0.5 font-mono text-[9px] font-semibold text-primary-foreground hover:opacity-90"
                   >
-                    Proceed to Stage 19
+                    Proceed to Step 19
                   </Link>
                 )}
               </div>
             </div>
-          ))
+            );
+          })
+
         )}
       </div>
       </details>
@@ -585,7 +831,7 @@ function SubClientMapping() {
 
       {/* toolbar */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <button className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-wireline px-3 py-1.5 font-mono text-[10px] text-muted-foreground hover:border-accent hover:text-accent">
+        <button className="inline-flex items-center gap-1.5 rounded-md border border-wireline px-3 py-1.5 font-mono text-[10px] text-muted-foreground hover:border-accent hover:text-accent">
           <Download className="h-3.5 w-3.5" /> Export mapping
         </button>
         <span className="ml-auto font-mono text-[10px] text-muted-foreground">
@@ -625,7 +871,17 @@ function SubClientMapping() {
           ← Back to Access & RBAC
         </Link>
       </div>
+
+      {research && (
+        <ResearchModal
+          row={research.row}
+          stage={research.stage}
+          result={results[research.row.id] ?? null}
+          onClose={() => setResearch(null)}
+        />
+      )}
     </div>
+
   );
 }
 

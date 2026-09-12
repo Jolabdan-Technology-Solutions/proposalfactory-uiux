@@ -12,14 +12,14 @@ const TABS: { id: Tab; label: string; icon: typeof FileText; hint: string }[] = 
 
 const ROWS: Record<Tab, { name: string; ref: string; owner: string; when: string; state: string }[]> = {
   drafts: [
-    { name: "Navy IT Modernization", ref: "N00178-25-R-0042", owner: "Julie", when: "Edited today", state: "Volume 1 in review" },
-    { name: "VA Clinic Staffing", ref: "36C24825R0037", owner: "Reggie", when: "Edited yesterday", state: "Pricing pending" },
-    { name: "Army Training Support", ref: "W9124-26-R-0003", owner: "Julie", when: "2 days ago", state: "Compliance matrix open" },
+    { name: "Navy IT Modernization", ref: "N00178-25-R-0042", owner: "Admin User", when: "Edited today", state: "Volume 1 in review" },
+    { name: "VA Clinic Staffing", ref: "36C24825R0037", owner: "BD User", when: "Edited yesterday", state: "Pricing pending" },
+    { name: "Army Training Support", ref: "W9124-26-R-0003", owner: "Admin User", when: "2 days ago", state: "Compliance matrix open" },
   ],
   archived: [
-    { name: "GSA Facilities Support", ref: "47QRAA-25-R-0088", owner: "Julie", when: "12 Aug 2026", state: "Submitted · no award yet" },
-    { name: "State DOT Signage", ref: "SLED-2025-114", owner: "Reggie", when: "4 Aug 2026", state: "No-go · archived" },
-    { name: "City of Atlanta Events", ref: "COA-2026-EV-07", owner: "Delano", when: "22 Jul 2026", state: "Won · closed out" },
+    { name: "GSA Facilities Support", ref: "47QRAA-25-R-0088", owner: "Admin User", when: "12 Aug 2026", state: "Submitted · no award yet" },
+    { name: "State DOT Signage", ref: "SLED-2025-114", owner: "BD User", when: "4 Aug 2026", state: "No-go · archived" },
+    { name: "City of Atlanta Events", ref: "COA-2026-EV-07", owner: "Platform Owner", when: "22 Jul 2026", state: "Won · closed out" },
   ],
   new: [
     { name: "DHS Campus Security", ref: "70RTAC-25-R-0011", owner: "Unassigned", when: "Go decision 3 Sep", state: "Ready to start" },
@@ -42,7 +42,7 @@ function Proposals() {
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
           Everything being written, everything finished, and the opportunities cleared to start.
         </p>
-        <div className="mt-4 border-b border-dashed border-wireline" />
+        <div className="mt-4 border-b border-wireline" />
       </header>
 
       <div className="mb-4 flex flex-wrap items-center gap-1 border-b border-border">
@@ -84,7 +84,7 @@ function Proposals() {
             </div>
             <span className="text-muted-foreground">{r.owner}</span>
             <span className="font-mono text-[10px] text-muted-foreground">{r.when}</span>
-            <span className="rounded-full border border-dashed border-wireline px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+            <span className="rounded-full border border-wireline px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
               {r.state}
             </span>
           </div>

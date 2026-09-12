@@ -74,7 +74,7 @@ function Dashboard() {
           summary={role.scope}
         >
           {role.status === "planned" && (
-            <span className="mb-3 inline-block rounded-full border border-dashed border-wireline px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+            <span className="mb-3 inline-block rounded-full border border-wireline px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
               switches on at go-live
             </span>
           )}
@@ -133,7 +133,7 @@ function Dashboard() {
           <Link
             key={p.pod}
             to={p.to}
-            className="group rounded-xl border border-dashed border-wireline bg-card/40 p-5 transition-colors hover:border-accent/60"
+            className="group rounded-xl border border-wireline bg-card/40 p-5 transition-colors hover:border-accent/60"
           >
             <div className="flex items-center justify-between">
               <p
@@ -167,7 +167,7 @@ function Dashboard() {
 
       {/* Gates + activity */}
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <div className="rounded-xl border border-dashed border-wireline bg-card/40 p-5">
+        <div className="rounded-xl border border-wireline bg-card/40 p-5">
           <h3 className="text-sm font-bold">
             {role && !role.canDecide ? "Decisions raised by you (awaiting an admin)" : "Decisions waiting on you"}
           </h3>
@@ -199,7 +199,7 @@ function Dashboard() {
       {/* Reference & roadmap */}
       <div
         className={
-          "mt-6 rounded-xl border border-dashed border-wireline bg-card/40 p-5 " +
+          "mt-6 rounded-xl border border-wireline bg-card/40 p-5 " +
           (role && !role.pods.includes(4) ? "hidden" : "")
         }
       >
@@ -209,7 +209,7 @@ function Dashboard() {
             <Link
               key={s.path}
               to={s.path}
-              className="whitespace-nowrap rounded-full border border-dashed border-wireline px-3 py-1 font-mono text-[11px] text-pod-4 hover:border-pod-4"
+              className="whitespace-nowrap rounded-full border border-wireline px-3 py-1 font-mono text-[11px] text-pod-4 hover:border-pod-4"
             >
               {s.label}
             </Link>

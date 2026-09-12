@@ -18,6 +18,7 @@ import {
 } from "@/lib/deals";
 import { DealTable } from "@/components/wireframe/deal-table";
 import { CompanionBubble } from "@/components/wireframe/primitives";
+import { SystemRecordsStrip } from "@/components/wireframe/system-records";
 
 function podFromSearch(raw: unknown): PodId {
   const n = Number(raw);
@@ -91,7 +92,7 @@ function Chip({
         "rounded-full border px-3 py-1 font-mono text-[10px] transition-colors " +
         (active
           ? "border-accent bg-accent/15 text-accent"
-          : "border-dashed border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground")
+          : "border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground")
       }
     >
       {label}
@@ -134,24 +135,7 @@ function PipelinePage() {
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
           {copy.pipelineBlurb} Sample data — no live systems are connected yet.
         </p>
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {([1, 2, 3] as PodId[]).map((p) => (
-            <Link
-              key={p}
-              to="/pipeline"
-              search={{ pod: p }}
-              className={
-                "rounded-full border px-3 py-1 font-mono text-[10px] transition-colors " +
-                (p === pod
-                  ? "border-accent bg-accent/15 text-accent"
-                  : "border-dashed border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground")
-              }
-            >
-              {POD_COPY[p].pipelineTitle}
-            </Link>
-          ))}
-        </div>
-        <div className="mt-4 border-b border-dashed border-wireline" />
+        <div className="mt-4 border-b border-wireline" />
       </header>
 
       <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -243,7 +227,7 @@ function PipelinePage() {
             <button
               type="button"
               onClick={() => setF(EMPTY_FILTERS)}
-              className="ml-auto inline-flex items-center gap-1 rounded-md border border-dashed border-wireline px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:border-accent hover:text-accent"
+              className="ml-auto inline-flex items-center gap-1 rounded-md border border-wireline px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:border-accent hover:text-accent"
             >
               <X className="h-3 w-3" /> Clear {active}
             </button>
@@ -262,7 +246,7 @@ function PipelinePage() {
               "rounded-xl border p-3 text-left transition-colors " +
               (f.status === s.label
                 ? "border-accent bg-accent/10"
-                : "border-dashed border-wireline hover:border-accent/60")
+                : "border-wireline hover:border-accent/60")
             }
           >
             <p className="truncate font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -278,6 +262,10 @@ function PipelinePage() {
 
       <DealTable deals={results} pod={pod} />
 
+      <div className="mt-6">
+        <SystemRecordsStrip deals={results} />
+      </div>
+
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <Link
           to="/opportunities"
@@ -288,7 +276,7 @@ function PipelinePage() {
         </Link>
         <Link
           to={pod === 1 ? "/bid-decision" : pod === 2 ? "/event-intake" : "/approvals"}
-          className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:border-accent hover:text-accent"
+          className="inline-flex items-center gap-1.5 rounded-md border border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:border-accent hover:text-accent"
         >
           <Flame className="h-3 w-3" />
           {pod === 1
@@ -299,7 +287,7 @@ function PipelinePage() {
         </Link>
         <Link
           to={copy.hub}
-          className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:border-accent hover:text-accent"
+          className="inline-flex items-center gap-1.5 rounded-md border border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:border-accent hover:text-accent"
         >
           ← Back to {copy.pod.split(" · ")[0]}
         </Link>

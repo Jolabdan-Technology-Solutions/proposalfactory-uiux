@@ -35,7 +35,7 @@ function SignInScreen() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="flex items-center justify-between border-b border-dashed border-wireline px-8 py-5 lg:px-14">
+      <header className="flex items-center justify-between border-b border-wireline px-8 py-5 lg:px-14">
         <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
           Step 2 of 2 · Sign in
@@ -60,7 +60,7 @@ function SignInScreen() {
             {role ? role.scope : "Pick a role first."}
           </p>
 
-          <div className="mt-8 max-w-md rounded-2xl border border-dashed border-wireline bg-card/60 p-7">
+          <div className="mt-8 max-w-md rounded-2xl border border-wireline bg-card/60 p-7">
             <div className="space-y-3">
               <SkeletonBlock label="Email" className="h-11" />
               <SkeletonBlock label="Password" className="h-11" />
@@ -83,7 +83,7 @@ function SignInScreen() {
       </main>
 
 
-      <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-dashed border-wireline px-8 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
+      <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-wireline px-8 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
         <span>© 2026 Mr. B2G &amp; Associates, LLC</span>
         <span>The Proposal Factory (TPF) · Privacy</span>
       </footer>

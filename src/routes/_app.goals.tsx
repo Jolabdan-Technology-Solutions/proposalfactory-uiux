@@ -66,7 +66,7 @@ function GoalChooser() {
             ? "Pick one task. You'll only see the steps that task needs, with a progress bar showing how far along you are."
             : "Everything is grouped under a pod. Choose the pod first, then the task inside it."}
         </p>
-        <div className="mt-4 border-b border-dashed border-wireline" />
+        <div className="mt-4 border-b border-wireline" />
       </header>
 
       {!pod && (
@@ -76,13 +76,13 @@ function GoalChooser() {
               key={p.pod}
               type="button"
               onClick={() => {
-                if (role?.id === "platform-owner-admin" && p.pod !== 4) {
+                if (p.pod !== 4) {
                   navigate({ to: POD_DASHBOARDS[p.pod] });
                   return;
                 }
                 setPod(p.pod);
               }}
-              className="group rounded-2xl border border-dashed border-wireline bg-card/50 p-6 text-left transition-colors hover:border-accent"
+              className="group rounded-2xl border border-wireline bg-card/50 p-6 text-left transition-colors hover:border-accent"
             >
               <div className="flex items-center justify-between">
                 <p className="text-lg font-bold">{p.name}</p>
@@ -123,7 +123,7 @@ function GoalChooser() {
                   setActiveGoal(g.id);
                   navigate({ to: g.steps[0]! });
                 }}
-                className="group rounded-2xl border border-dashed border-wireline bg-card/50 p-6 text-left transition-colors hover:border-accent"
+                className="group rounded-2xl border border-wireline bg-card/50 p-6 text-left transition-colors hover:border-accent"
               >
                 <p className="text-lg font-bold">{g.title}</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{g.blurb}</p>

@@ -41,7 +41,7 @@ function SignUpScreen() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-dashed border-wireline px-6 py-5 lg:px-14">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-wireline px-6 py-5 lg:px-14">
         <Link to="/start" className="min-w-0">
           <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         </Link>
@@ -77,13 +77,13 @@ function SignUpScreen() {
                 placeholder={f.placeholder}
                 value={values[f.id] ?? ""}
                 onChange={(e) => setValues((v) => ({ ...v, [f.id]: e.target.value }))}
-                className="mt-2 w-full rounded-xl border border-dashed border-wireline bg-card/40 px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-accent"
+                className="mt-2 w-full rounded-xl border border-wireline bg-card/40 px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-accent"
               />
             </label>
           ))}
         </div>
 
-        <label className="mt-6 flex items-start gap-3 rounded-xl border border-dashed border-wireline bg-card/40 p-4">
+        <label className="mt-6 flex items-start gap-3 rounded-xl border border-wireline bg-card/40 p-4">
           <input
             type="checkbox"
             checked={agreed}
@@ -112,7 +112,7 @@ function SignUpScreen() {
         </p>
       </main>
 
-      <footer className="border-t border-dashed border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
+      <footer className="border-t border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
         © 2026 Mr. B2G &amp; Associates, LLC · The Proposal Factory (TPF)
       </footer>
     </div>

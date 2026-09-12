@@ -33,7 +33,7 @@ function HelpLibrary() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-dashed border-wireline px-6 py-5 lg:px-14">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-wireline px-6 py-5 lg:px-14">
         <Link to="/" className="min-w-0">
           <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         </Link>
@@ -58,7 +58,7 @@ function HelpLibrary() {
           until you press play.
         </p>
 
-        <label className="mt-8 flex max-w-xl items-center gap-3 rounded-xl border border-dashed border-wireline bg-card/40 px-4 py-3">
+        <label className="mt-8 flex max-w-xl items-center gap-3 rounded-xl border border-wireline bg-card/40 px-4 py-3">
           <Search className="h-4 w-4 shrink-0 text-accent" aria-hidden />
           <input
             value={q}
@@ -69,7 +69,7 @@ function HelpLibrary() {
         </label>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
-          <ul className="divide-y divide-dashed divide-wireline overflow-hidden rounded-2xl border border-dashed border-wireline bg-card/40">
+          <ul className="divide-y divide-dashed divide-wireline overflow-hidden rounded-2xl border border-wireline bg-card/40">
             {results.map((f, i) => (
               <li key={f.id}>
                 <button
@@ -107,7 +107,7 @@ function HelpLibrary() {
         </div>
       </main>
 
-      <footer className="border-t border-dashed border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
+      <footer className="border-t border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
         © 2026 Mr. B2G &amp; Associates, LLC · The Proposal Factory (TPF)
       </footer>
     </div>

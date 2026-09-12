@@ -1,15 +1,10 @@
 import { cn } from "@/lib/utils";
-import { stepIndex, POD_NAMES, WORKFLOW_STEPS, type WorkflowStep } from "@/lib/workflow";
+import { POD_NAMES, type WorkflowStep } from "@/lib/workflow";
 
 export function ScreenHeader({ step }: { step: WorkflowStep }) {
-  const idx = stepIndex(step.path);
   return (
     <header className="mb-8">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-<span className="text-accent">
-          Step {idx + 1} / {WORKFLOW_STEPS.length}
-        </span>
-        <span aria-hidden>·</span>
         <span
           className={cn(
             step.pod === 1 && "text-pod-1",
@@ -27,7 +22,7 @@ export function ScreenHeader({ step }: { step: WorkflowStep }) {
         {step.label}
       </h1>
       <p className="mt-1 font-mono text-xs text-muted-foreground">Agents: {step.agent}</p>
-      <div className="mt-4 border-b border-dashed border-wireline" />
+      <div className="mt-4 border-b border-wireline" />
     </header>
   );
 }

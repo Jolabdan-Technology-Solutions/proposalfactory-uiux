@@ -14,27 +14,33 @@ export type Account = {
 
 export const ACCOUNTS: Account[] = [
   {
-    email: "owner@mrb2g.com",
+    email: "owner@example.com",
     name: "Platform Owner",
-    org: "Mr. B2G & Associates",
+    org: "Platform Operator",
     roles: ["platform-owner-admin"],
   },
   {
-    email: "admin@mrb2g.com",
+    email: "superadmin@example.com",
     name: "Super Administrator",
-    org: "Mr. B2G & Associates",
+    org: "Platform Operator",
+    roles: ["super-admin"],
+  },
+  {
+    email: "admin@example.com",
+    name: "Multi-Role Administrator",
+    org: "Platform Operator",
     roles: ["super-admin", "platform-owner-admin", "proposal-manager"],
   },
   {
-    email: "julie@mtm.com",
-    name: "Sub-Tenant Admin",
-    org: "MTM",
-    roles: ["subtenant-admin", "proposal-manager", "reviewer"],
+    email: "tenantadmin@example.com",
+    name: "Sub-Tenant Administrator",
+    org: "Tenant Organisation",
+    roles: ["super-admin"],
   },
   {
-    email: "user@mtm.com",
+    email: "user@example.com",
     name: "Sub-Tenant User",
-    org: "MTM",
+    org: "Tenant Organisation",
     roles: ["subtenant-user"],
   },
 ];

@@ -9,7 +9,7 @@ export const POD1_PARTS = [
     sub: "Also called Pre-Proposal",
     from: 1,
     to: 18,
-    entry: "/pipeline",
+    entry: "/discovery",
   },
   {
     n: 2,
@@ -56,7 +56,7 @@ export function JourneyBreadcrumb({
   const active = activePart ?? partForStep(stepNumber)?.n;
 
   return (
-    <div className={cn("rounded-xl border border-dashed border-wireline p-3", className)}>
+    <div className={cn("rounded-xl border border-wireline p-3", className)}>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
           Pod 1 journey
@@ -73,7 +73,7 @@ export function JourneyBreadcrumb({
                     "flex items-center gap-2 rounded-full border px-2.5 py-1 transition-colors",
                     isActive
                       ? "border-accent bg-accent/15 text-accent"
-                      : "border-dashed border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground",
+                      : "border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground",
                   )}
                 >
                   <span
@@ -81,7 +81,7 @@ export function JourneyBreadcrumb({
                       "flex size-4 items-center justify-center rounded-full font-mono text-[9px] font-bold",
                       isActive
                         ? "bg-accent text-accent-foreground"
-                        : "border border-dashed border-wireline",
+                        : "border border-wireline",
                     )}
                   >
                     {p.n}
@@ -100,7 +100,7 @@ export function JourneyBreadcrumb({
             <span className="font-mono text-[10px] text-muted-foreground">{label}</span>
           )}
           {maturity && (
-            <span className="rounded-full border border-dashed border-wireline px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+            <span className="rounded-full border border-wireline px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
               Maturity · {maturity}
             </span>
           )}

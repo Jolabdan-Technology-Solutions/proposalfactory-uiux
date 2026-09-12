@@ -11,6 +11,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/wireframe/app-sidebar";
 import { JourneyBreadcrumb, partForStep } from "@/components/wireframe/journey-header";
 import { GlobalFilters } from "@/components/wireframe/global-filters";
+import { PageCrumbs } from "@/components/wireframe/page-crumbs";
+
 
 const POD_TABS = [
   { label: "Dashboard", path: "/dashboard", pod: 0 },
@@ -63,7 +65,13 @@ export function WireframeShell({ children }: { children: ReactNode }) {
     pathname === "/pod1" || pathname === "/pod2" || pathname === "/pod3";
 
   // Plain library/directory pages: no step numbering, no prev/next step nav.
-  const hideStepNav = pathname === "/documents" || pathname === "/subclient-mapping";
+  const hideStepNav =
+    pathname === "/documents" ||
+    pathname === "/subclient-mapping" ||
+    pathname === "/won-proposals" ||
+    pathname === "/event-details" ||
+    pathname === "/event-wizard" ||
+    pathname.startsWith("/sub-clients");
 
   // Pod 1 pages that are not phase screens still get the numbered journey breadcrumb.
   // Directory pages that belong to other pods (e.g. /subclient-mapping is Pod 3) must not
@@ -82,28 +90,23 @@ export function WireframeShell({ children }: { children: ReactNode }) {
 
   const body = (
     <div className="min-h-screen flex-1 bg-background text-foreground">
-      <div className="sticky top-0 z-10 border-b border-dashed border-wireline bg-background/90 backdrop-blur">
+      <div className="sticky top-0 z-10 border-b border-wireline bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-6 py-3">
           {showSidebar && <SidebarTrigger className="shrink-0" />}
           <Link to="/dashboard" className="shrink-0 text-sm font-extrabold tracking-tight">
             {pageTitle}
-            <span className="ml-2 font-mono text-[9px] font-normal uppercase tracking-widest text-muted-foreground">
-              wireframe
-            </span>
           </Link>
 
-          <nav className="flex flex-1 items-center gap-1 overflow-x-auto">
+          <nav className="flex flex-1 items-center gap-1 overflow-x-auto rounded-lg bg-secondary/40 p-1">
             {tabs.map((t) => (
               <Link
                 key={t.path}
                 to={t.path}
                 className={cn(
-                  "whitespace-nowrap rounded-full border px-3 py-1 font-mono text-[10px] transition-colors",
-                  current?.pod === t.pod && t.pod !== 0
-                    ? "border-accent bg-accent/15 text-accent"
-                    : pathname === t.path
-                      ? "border-accent bg-accent/15 text-accent"
-                      : "border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground",
+                  "whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+                  (current?.pod === t.pod && t.pod !== 0) || pathname === t.path
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                 )}
               >
                 {t.label}
@@ -112,7 +115,7 @@ export function WireframeShell({ children }: { children: ReactNode }) {
           </nav>
           <div className="ml-auto flex items-center gap-2">
             {role && (
-              <span className="flex items-center gap-2 rounded-full border border-dashed border-wireline px-3 py-1 font-mono text-[10px] text-muted-foreground">
+              <span className="flex items-center gap-2 rounded-full border border-wireline px-3 py-1 font-mono text-[10px] text-muted-foreground">
                 <span className="text-accent">{role.name}</span>
                 {account && account.roles.length > 1 && (
                   <Link to="/roles" className="hover:text-foreground">
@@ -137,17 +140,16 @@ export function WireframeShell({ children }: { children: ReactNode }) {
                 {idx + 1}/{WORKFLOW_STEPS.length}
               </span>
             )}
-            {!hideStepNav && (
-              <button
-                type="button"
-                onClick={() => window.history.back()}
-                className="rounded-md border border-dashed border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:text-foreground"
-              >
-                ← Back
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => window.history.back()}
+              className="rounded-md border border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:text-foreground"
+            >
+              ← Back
+            </button>
 
-            {!hideStepNav && next && (
+
+            {!hideStepNav && !isPod1Phase && next && (
               <Link
                 to={next.path}
                 className="rounded-md bg-primary px-3 py-1.5 font-mono text-[11px] font-semibold text-primary-foreground hover:opacity-90"
@@ -159,14 +161,13 @@ export function WireframeShell({ children }: { children: ReactNode }) {
         </div>
 
         {goal && gPos >= 0 && (
-          <div className="border-t border-dashed border-wireline">
+          <div className="border-t border-wireline">
             <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-6 py-2.5">
               <span className="font-mono text-[10px] uppercase tracking-widest text-accent">
                 {goal.title}
               </span>
               <span className="font-mono text-[10px] text-muted-foreground">
-                Step {gPos + 1} of {goal.steps.length}
-                {current ? ` · ${current.label}` : ""}
+                {current ? current.label : ""}
               </span>
               <div
                 className="h-1.5 min-w-[140px] flex-1 overflow-hidden rounded-full bg-secondary"
@@ -192,7 +193,9 @@ export function WireframeShell({ children }: { children: ReactNode }) {
         )}
       </div>
       <main className="mx-auto max-w-6xl px-6 py-10">
+        {pathname !== "/dashboard" && <PageCrumbs className="mb-5" />}
         {showBreadcrumb && <JourneyBreadcrumb activePart={breadcrumbPart} className="mb-6" />}
+
         {showGlobalFilters && (
           <GlobalFilters className="mb-6" pod={pathname === "/pod2" ? 2 : pathname === "/pod3" ? 3 : 1} />
         )}

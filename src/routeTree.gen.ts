@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as OrientationRouteImport } from './routes/orientation'
 import { Route as RolesRouteImport } from './routes/roles'
@@ -18,6 +19,7 @@ import { Route as SigninRouteImport } from './routes/signin'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as StartRouteImport } from './routes/start'
 import { Route as AppAccessRouteImport } from './routes/_app.access'
+import { Route as AppActivityRouteImport } from './routes/_app.activity'
 import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
 import { Route as AppAuditRouteImport } from './routes/_app.audit'
 import { Route as AppAwardRouteImport } from './routes/_app.award'
@@ -29,13 +31,17 @@ import { Route as AppCommsRegistrationRouteImport } from './routes/_app.comms-re
 import { Route as AppComplianceRouteImport } from './routes/_app.compliance'
 import { Route as AppConnectorsRouteImport } from './routes/_app.connectors'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppDiscoveryRouteImport } from './routes/_app.discovery'
 import { Route as AppDocumentsRouteImport } from './routes/_app.documents'
+import { Route as AppEventDetailsRouteImport } from './routes/_app.event-details'
+import { Route as AppEventHandoffsRouteImport } from './routes/_app.event-handoffs'
 import { Route as AppEventIntakeRouteImport } from './routes/_app.event-intake'
+import { Route as AppEventWizardRouteImport } from './routes/_app.event-wizard'
 import { Route as AppExecutionRouteImport } from './routes/_app.execution'
 import { Route as AppExecutionPrepRouteImport } from './routes/_app.execution-prep'
 import { Route as AppFinalizationRouteImport } from './routes/_app.finalization'
-import { Route as AppFuturePodsRouteImport } from './routes/_app.future-pods'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
+import { Route as AppHandoffsRouteImport } from './routes/_app.handoffs'
 import { Route as AppMasterMapRouteImport } from './routes/_app.master-map'
 import { Route as AppMaturityRouteImport } from './routes/_app.maturity'
 import { Route as AppOpportunitiesRouteImport } from './routes/_app.opportunities'
@@ -52,14 +58,21 @@ import { Route as AppReferenceRouteImport } from './routes/_app.reference'
 import { Route as AppRevisionRouteImport } from './routes/_app.revision'
 import { Route as AppRfpIntakeRouteImport } from './routes/_app.rfp-intake'
 import { Route as AppRoadmapRouteImport } from './routes/_app.roadmap'
+import { Route as AppSalesEngineRouteImport } from './routes/_app.sales-engine'
 import { Route as AppShapingRouteImport } from './routes/_app.shaping'
 import { Route as AppSubclientMappingRouteImport } from './routes/_app.subclient-mapping'
 import { Route as AppSubmissionRouteImport } from './routes/_app.submission'
 import { Route as AppTalentSponsorsRouteImport } from './routes/_app.talent-sponsors'
 import { Route as AppTechCostRouteImport } from './routes/_app.tech-cost'
 import { Route as AppVenuePitchRouteImport } from './routes/_app.venue-pitch'
+import { Route as AppWonProposalsRouteImport } from './routes/_app.won-proposals'
 import { Route as IntakeIndexRouteImport } from './routes/intake.index'
 import { Route as IntakeReviewRouteImport } from './routes/intake.review'
+import { Route as AppAccountSlugRouteImport } from './routes/_app.account.$slug'
+import { Route as AppEventOpsSlugRouteImport } from './routes/_app.event-ops.$slug'
+import { Route as AppPlatformSlugRouteImport } from './routes/_app.platform.$slug'
+import { Route as AppSubClientsIndexRouteImport } from './routes/_app.sub-clients.index'
+import { Route as AppSubClientsIdRouteImport } from './routes/_app.sub-clients.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -68,6 +81,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HelpRoute = HelpRouteImport.update({
@@ -103,6 +121,11 @@ const StartRoute = StartRouteImport.update({
 const AppAccessRoute = AppAccessRouteImport.update({
   id: '/access',
   path: '/access',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppActivityRoute = AppActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
   getParentRoute: () => AppRoute,
 } as any)
 const AppApprovalsRoute = AppApprovalsRouteImport.update({
@@ -160,14 +183,34 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDiscoveryRoute = AppDiscoveryRouteImport.update({
+  id: '/discovery',
+  path: '/discovery',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDocumentsRoute = AppDocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEventDetailsRoute = AppEventDetailsRouteImport.update({
+  id: '/event-details',
+  path: '/event-details',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEventHandoffsRoute = AppEventHandoffsRouteImport.update({
+  id: '/event-handoffs',
+  path: '/event-handoffs',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppEventIntakeRoute = AppEventIntakeRouteImport.update({
   id: '/event-intake',
   path: '/event-intake',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEventWizardRoute = AppEventWizardRouteImport.update({
+  id: '/event-wizard',
+  path: '/event-wizard',
   getParentRoute: () => AppRoute,
 } as any)
 const AppExecutionRoute = AppExecutionRouteImport.update({
@@ -185,14 +228,14 @@ const AppFinalizationRoute = AppFinalizationRouteImport.update({
   path: '/finalization',
   getParentRoute: () => AppRoute,
 } as any)
-const AppFuturePodsRoute = AppFuturePodsRouteImport.update({
-  id: '/future-pods',
-  path: '/future-pods',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppGoalsRoute = AppGoalsRouteImport.update({
   id: '/goals',
   path: '/goals',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHandoffsRoute = AppHandoffsRouteImport.update({
+  id: '/handoffs',
+  path: '/handoffs',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMasterMapRoute = AppMasterMapRouteImport.update({
@@ -275,6 +318,11 @@ const AppRoadmapRoute = AppRoadmapRouteImport.update({
   path: '/roadmap',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSalesEngineRoute = AppSalesEngineRouteImport.update({
+  id: '/sales-engine',
+  path: '/sales-engine',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppShapingRoute = AppShapingRouteImport.update({
   id: '/shaping',
   path: '/shaping',
@@ -305,6 +353,11 @@ const AppVenuePitchRoute = AppVenuePitchRouteImport.update({
   path: '/venue-pitch',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWonProposalsRoute = AppWonProposalsRouteImport.update({
+  id: '/won-proposals',
+  path: '/won-proposals',
+  getParentRoute: () => AppRoute,
+} as any)
 const IntakeIndexRoute = IntakeIndexRouteImport.update({
   id: '/intake/',
   path: '/intake/',
@@ -315,9 +368,35 @@ const IntakeReviewRoute = IntakeReviewRouteImport.update({
   path: '/intake/review',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppAccountSlugRoute = AppAccountSlugRouteImport.update({
+  id: '/account/$slug',
+  path: '/account/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEventOpsSlugRoute = AppEventOpsSlugRouteImport.update({
+  id: '/event-ops/$slug',
+  path: '/event-ops/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlatformSlugRoute = AppPlatformSlugRouteImport.update({
+  id: '/platform/$slug',
+  path: '/platform/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubClientsIndexRoute = AppSubClientsIndexRouteImport.update({
+  id: '/sub-clients/',
+  path: '/sub-clients/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubClientsIdRoute = AppSubClientsIdRouteImport.update({
+  id: '/sub-clients/$id',
+  path: '/sub-clients/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/help': typeof HelpRoute
   '/orientation': typeof OrientationRoute
   '/roles': typeof RolesRoute
@@ -325,6 +404,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/start': typeof StartRoute
   '/access': typeof AppAccessRoute
+  '/activity': typeof AppActivityRoute
   '/approvals': typeof AppApprovalsRoute
   '/audit': typeof AppAuditRoute
   '/award': typeof AppAwardRoute
@@ -336,13 +416,17 @@ export interface FileRoutesByFullPath {
   '/compliance': typeof AppComplianceRoute
   '/connectors': typeof AppConnectorsRoute
   '/dashboard': typeof AppDashboardRoute
+  '/discovery': typeof AppDiscoveryRoute
   '/documents': typeof AppDocumentsRoute
+  '/event-details': typeof AppEventDetailsRoute
+  '/event-handoffs': typeof AppEventHandoffsRoute
   '/event-intake': typeof AppEventIntakeRoute
+  '/event-wizard': typeof AppEventWizardRoute
   '/execution': typeof AppExecutionRoute
   '/execution-prep': typeof AppExecutionPrepRoute
   '/finalization': typeof AppFinalizationRoute
-  '/future-pods': typeof AppFuturePodsRoute
   '/goals': typeof AppGoalsRoute
+  '/handoffs': typeof AppHandoffsRoute
   '/master-map': typeof AppMasterMapRoute
   '/maturity': typeof AppMaturityRoute
   '/opportunities': typeof AppOpportunitiesRoute
@@ -359,17 +443,25 @@ export interface FileRoutesByFullPath {
   '/revision': typeof AppRevisionRoute
   '/rfp-intake': typeof AppRfpIntakeRoute
   '/roadmap': typeof AppRoadmapRoute
+  '/sales-engine': typeof AppSalesEngineRoute
   '/shaping': typeof AppShapingRoute
   '/subclient-mapping': typeof AppSubclientMappingRoute
   '/submission': typeof AppSubmissionRoute
   '/talent-sponsors': typeof AppTalentSponsorsRoute
   '/tech-cost': typeof AppTechCostRoute
   '/venue-pitch': typeof AppVenuePitchRoute
+  '/won-proposals': typeof AppWonProposalsRoute
   '/intake/review': typeof IntakeReviewRoute
   '/intake/': typeof IntakeIndexRoute
+  '/account/$slug': typeof AppAccountSlugRoute
+  '/event-ops/$slug': typeof AppEventOpsSlugRoute
+  '/platform/$slug': typeof AppPlatformSlugRoute
+  '/sub-clients/$id': typeof AppSubClientsIdRoute
+  '/sub-clients/': typeof AppSubClientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/help': typeof HelpRoute
   '/orientation': typeof OrientationRoute
   '/roles': typeof RolesRoute
@@ -377,6 +469,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/start': typeof StartRoute
   '/access': typeof AppAccessRoute
+  '/activity': typeof AppActivityRoute
   '/approvals': typeof AppApprovalsRoute
   '/audit': typeof AppAuditRoute
   '/award': typeof AppAwardRoute
@@ -388,13 +481,17 @@ export interface FileRoutesByTo {
   '/compliance': typeof AppComplianceRoute
   '/connectors': typeof AppConnectorsRoute
   '/dashboard': typeof AppDashboardRoute
+  '/discovery': typeof AppDiscoveryRoute
   '/documents': typeof AppDocumentsRoute
+  '/event-details': typeof AppEventDetailsRoute
+  '/event-handoffs': typeof AppEventHandoffsRoute
   '/event-intake': typeof AppEventIntakeRoute
+  '/event-wizard': typeof AppEventWizardRoute
   '/execution': typeof AppExecutionRoute
   '/execution-prep': typeof AppExecutionPrepRoute
   '/finalization': typeof AppFinalizationRoute
-  '/future-pods': typeof AppFuturePodsRoute
   '/goals': typeof AppGoalsRoute
+  '/handoffs': typeof AppHandoffsRoute
   '/master-map': typeof AppMasterMapRoute
   '/maturity': typeof AppMaturityRoute
   '/opportunities': typeof AppOpportunitiesRoute
@@ -411,19 +508,27 @@ export interface FileRoutesByTo {
   '/revision': typeof AppRevisionRoute
   '/rfp-intake': typeof AppRfpIntakeRoute
   '/roadmap': typeof AppRoadmapRoute
+  '/sales-engine': typeof AppSalesEngineRoute
   '/shaping': typeof AppShapingRoute
   '/subclient-mapping': typeof AppSubclientMappingRoute
   '/submission': typeof AppSubmissionRoute
   '/talent-sponsors': typeof AppTalentSponsorsRoute
   '/tech-cost': typeof AppTechCostRoute
   '/venue-pitch': typeof AppVenuePitchRoute
+  '/won-proposals': typeof AppWonProposalsRoute
   '/intake/review': typeof IntakeReviewRoute
   '/intake': typeof IntakeIndexRoute
+  '/account/$slug': typeof AppAccountSlugRoute
+  '/event-ops/$slug': typeof AppEventOpsSlugRoute
+  '/platform/$slug': typeof AppPlatformSlugRoute
+  '/sub-clients/$id': typeof AppSubClientsIdRoute
+  '/sub-clients': typeof AppSubClientsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/admin': typeof AdminRoute
   '/help': typeof HelpRoute
   '/orientation': typeof OrientationRoute
   '/roles': typeof RolesRoute
@@ -431,6 +536,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/start': typeof StartRoute
   '/_app/access': typeof AppAccessRoute
+  '/_app/activity': typeof AppActivityRoute
   '/_app/approvals': typeof AppApprovalsRoute
   '/_app/audit': typeof AppAuditRoute
   '/_app/award': typeof AppAwardRoute
@@ -442,13 +548,17 @@ export interface FileRoutesById {
   '/_app/compliance': typeof AppComplianceRoute
   '/_app/connectors': typeof AppConnectorsRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/discovery': typeof AppDiscoveryRoute
   '/_app/documents': typeof AppDocumentsRoute
+  '/_app/event-details': typeof AppEventDetailsRoute
+  '/_app/event-handoffs': typeof AppEventHandoffsRoute
   '/_app/event-intake': typeof AppEventIntakeRoute
+  '/_app/event-wizard': typeof AppEventWizardRoute
   '/_app/execution': typeof AppExecutionRoute
   '/_app/execution-prep': typeof AppExecutionPrepRoute
   '/_app/finalization': typeof AppFinalizationRoute
-  '/_app/future-pods': typeof AppFuturePodsRoute
   '/_app/goals': typeof AppGoalsRoute
+  '/_app/handoffs': typeof AppHandoffsRoute
   '/_app/master-map': typeof AppMasterMapRoute
   '/_app/maturity': typeof AppMaturityRoute
   '/_app/opportunities': typeof AppOpportunitiesRoute
@@ -465,19 +575,27 @@ export interface FileRoutesById {
   '/_app/revision': typeof AppRevisionRoute
   '/_app/rfp-intake': typeof AppRfpIntakeRoute
   '/_app/roadmap': typeof AppRoadmapRoute
+  '/_app/sales-engine': typeof AppSalesEngineRoute
   '/_app/shaping': typeof AppShapingRoute
   '/_app/subclient-mapping': typeof AppSubclientMappingRoute
   '/_app/submission': typeof AppSubmissionRoute
   '/_app/talent-sponsors': typeof AppTalentSponsorsRoute
   '/_app/tech-cost': typeof AppTechCostRoute
   '/_app/venue-pitch': typeof AppVenuePitchRoute
+  '/_app/won-proposals': typeof AppWonProposalsRoute
   '/intake/review': typeof IntakeReviewRoute
   '/intake/': typeof IntakeIndexRoute
+  '/_app/account/$slug': typeof AppAccountSlugRoute
+  '/_app/event-ops/$slug': typeof AppEventOpsSlugRoute
+  '/_app/platform/$slug': typeof AppPlatformSlugRoute
+  '/_app/sub-clients/$id': typeof AppSubClientsIdRoute
+  '/_app/sub-clients/': typeof AppSubClientsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/help'
     | '/orientation'
     | '/roles'
@@ -485,6 +603,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/start'
     | '/access'
+    | '/activity'
     | '/approvals'
     | '/audit'
     | '/award'
@@ -496,13 +615,17 @@ export interface FileRouteTypes {
     | '/compliance'
     | '/connectors'
     | '/dashboard'
+    | '/discovery'
     | '/documents'
+    | '/event-details'
+    | '/event-handoffs'
     | '/event-intake'
+    | '/event-wizard'
     | '/execution'
     | '/execution-prep'
     | '/finalization'
-    | '/future-pods'
     | '/goals'
+    | '/handoffs'
     | '/master-map'
     | '/maturity'
     | '/opportunities'
@@ -519,17 +642,25 @@ export interface FileRouteTypes {
     | '/revision'
     | '/rfp-intake'
     | '/roadmap'
+    | '/sales-engine'
     | '/shaping'
     | '/subclient-mapping'
     | '/submission'
     | '/talent-sponsors'
     | '/tech-cost'
     | '/venue-pitch'
+    | '/won-proposals'
     | '/intake/review'
     | '/intake/'
+    | '/account/$slug'
+    | '/event-ops/$slug'
+    | '/platform/$slug'
+    | '/sub-clients/$id'
+    | '/sub-clients/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/help'
     | '/orientation'
     | '/roles'
@@ -537,6 +668,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/start'
     | '/access'
+    | '/activity'
     | '/approvals'
     | '/audit'
     | '/award'
@@ -548,13 +680,17 @@ export interface FileRouteTypes {
     | '/compliance'
     | '/connectors'
     | '/dashboard'
+    | '/discovery'
     | '/documents'
+    | '/event-details'
+    | '/event-handoffs'
     | '/event-intake'
+    | '/event-wizard'
     | '/execution'
     | '/execution-prep'
     | '/finalization'
-    | '/future-pods'
     | '/goals'
+    | '/handoffs'
     | '/master-map'
     | '/maturity'
     | '/opportunities'
@@ -571,18 +707,26 @@ export interface FileRouteTypes {
     | '/revision'
     | '/rfp-intake'
     | '/roadmap'
+    | '/sales-engine'
     | '/shaping'
     | '/subclient-mapping'
     | '/submission'
     | '/talent-sponsors'
     | '/tech-cost'
     | '/venue-pitch'
+    | '/won-proposals'
     | '/intake/review'
     | '/intake'
+    | '/account/$slug'
+    | '/event-ops/$slug'
+    | '/platform/$slug'
+    | '/sub-clients/$id'
+    | '/sub-clients'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/admin'
     | '/help'
     | '/orientation'
     | '/roles'
@@ -590,6 +734,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/start'
     | '/_app/access'
+    | '/_app/activity'
     | '/_app/approvals'
     | '/_app/audit'
     | '/_app/award'
@@ -601,13 +746,17 @@ export interface FileRouteTypes {
     | '/_app/compliance'
     | '/_app/connectors'
     | '/_app/dashboard'
+    | '/_app/discovery'
     | '/_app/documents'
+    | '/_app/event-details'
+    | '/_app/event-handoffs'
     | '/_app/event-intake'
+    | '/_app/event-wizard'
     | '/_app/execution'
     | '/_app/execution-prep'
     | '/_app/finalization'
-    | '/_app/future-pods'
     | '/_app/goals'
+    | '/_app/handoffs'
     | '/_app/master-map'
     | '/_app/maturity'
     | '/_app/opportunities'
@@ -624,19 +773,27 @@ export interface FileRouteTypes {
     | '/_app/revision'
     | '/_app/rfp-intake'
     | '/_app/roadmap'
+    | '/_app/sales-engine'
     | '/_app/shaping'
     | '/_app/subclient-mapping'
     | '/_app/submission'
     | '/_app/talent-sponsors'
     | '/_app/tech-cost'
     | '/_app/venue-pitch'
+    | '/_app/won-proposals'
     | '/intake/review'
     | '/intake/'
+    | '/_app/account/$slug'
+    | '/_app/event-ops/$slug'
+    | '/_app/platform/$slug'
+    | '/_app/sub-clients/$id'
+    | '/_app/sub-clients/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  AdminRoute: typeof AdminRoute
   HelpRoute: typeof HelpRoute
   OrientationRoute: typeof OrientationRoute
   RolesRoute: typeof RolesRoute
@@ -661,6 +818,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/help': {
@@ -710,6 +874,13 @@ declare module '@tanstack/react-router' {
       path: '/access'
       fullPath: '/access'
       preLoaderRoute: typeof AppAccessRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/activity': {
+      id: '/_app/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof AppActivityRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/approvals': {
@@ -789,6 +960,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/discovery': {
+      id: '/_app/discovery'
+      path: '/discovery'
+      fullPath: '/discovery'
+      preLoaderRoute: typeof AppDiscoveryRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/documents': {
       id: '/_app/documents'
       path: '/documents'
@@ -796,11 +974,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDocumentsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/event-details': {
+      id: '/_app/event-details'
+      path: '/event-details'
+      fullPath: '/event-details'
+      preLoaderRoute: typeof AppEventDetailsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/event-handoffs': {
+      id: '/_app/event-handoffs'
+      path: '/event-handoffs'
+      fullPath: '/event-handoffs'
+      preLoaderRoute: typeof AppEventHandoffsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/event-intake': {
       id: '/_app/event-intake'
       path: '/event-intake'
       fullPath: '/event-intake'
       preLoaderRoute: typeof AppEventIntakeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/event-wizard': {
+      id: '/_app/event-wizard'
+      path: '/event-wizard'
+      fullPath: '/event-wizard'
+      preLoaderRoute: typeof AppEventWizardRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/execution': {
@@ -824,18 +1023,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFinalizationRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/future-pods': {
-      id: '/_app/future-pods'
-      path: '/future-pods'
-      fullPath: '/future-pods'
-      preLoaderRoute: typeof AppFuturePodsRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/goals': {
       id: '/_app/goals'
       path: '/goals'
       fullPath: '/goals'
       preLoaderRoute: typeof AppGoalsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/handoffs': {
+      id: '/_app/handoffs'
+      path: '/handoffs'
+      fullPath: '/handoffs'
+      preLoaderRoute: typeof AppHandoffsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/master-map': {
@@ -950,6 +1149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRoadmapRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/sales-engine': {
+      id: '/_app/sales-engine'
+      path: '/sales-engine'
+      fullPath: '/sales-engine'
+      preLoaderRoute: typeof AppSalesEngineRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/shaping': {
       id: '/_app/shaping'
       path: '/shaping'
@@ -992,6 +1198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppVenuePitchRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/won-proposals': {
+      id: '/_app/won-proposals'
+      path: '/won-proposals'
+      fullPath: '/won-proposals'
+      preLoaderRoute: typeof AppWonProposalsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/intake/': {
       id: '/intake/'
       path: '/intake'
@@ -1006,11 +1219,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IntakeReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/account/$slug': {
+      id: '/_app/account/$slug'
+      path: '/account/$slug'
+      fullPath: '/account/$slug'
+      preLoaderRoute: typeof AppAccountSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/event-ops/$slug': {
+      id: '/_app/event-ops/$slug'
+      path: '/event-ops/$slug'
+      fullPath: '/event-ops/$slug'
+      preLoaderRoute: typeof AppEventOpsSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/platform/$slug': {
+      id: '/_app/platform/$slug'
+      path: '/platform/$slug'
+      fullPath: '/platform/$slug'
+      preLoaderRoute: typeof AppPlatformSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sub-clients/': {
+      id: '/_app/sub-clients/'
+      path: '/sub-clients'
+      fullPath: '/sub-clients/'
+      preLoaderRoute: typeof AppSubClientsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sub-clients/$id': {
+      id: '/_app/sub-clients/$id'
+      path: '/sub-clients/$id'
+      fullPath: '/sub-clients/$id'
+      preLoaderRoute: typeof AppSubClientsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppAccessRoute: typeof AppAccessRoute
+  AppActivityRoute: typeof AppActivityRoute
   AppApprovalsRoute: typeof AppApprovalsRoute
   AppAuditRoute: typeof AppAuditRoute
   AppAwardRoute: typeof AppAwardRoute
@@ -1022,13 +1271,17 @@ interface AppRouteChildren {
   AppComplianceRoute: typeof AppComplianceRoute
   AppConnectorsRoute: typeof AppConnectorsRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDiscoveryRoute: typeof AppDiscoveryRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
+  AppEventDetailsRoute: typeof AppEventDetailsRoute
+  AppEventHandoffsRoute: typeof AppEventHandoffsRoute
   AppEventIntakeRoute: typeof AppEventIntakeRoute
+  AppEventWizardRoute: typeof AppEventWizardRoute
   AppExecutionRoute: typeof AppExecutionRoute
   AppExecutionPrepRoute: typeof AppExecutionPrepRoute
   AppFinalizationRoute: typeof AppFinalizationRoute
-  AppFuturePodsRoute: typeof AppFuturePodsRoute
   AppGoalsRoute: typeof AppGoalsRoute
+  AppHandoffsRoute: typeof AppHandoffsRoute
   AppMasterMapRoute: typeof AppMasterMapRoute
   AppMaturityRoute: typeof AppMaturityRoute
   AppOpportunitiesRoute: typeof AppOpportunitiesRoute
@@ -1045,16 +1298,24 @@ interface AppRouteChildren {
   AppRevisionRoute: typeof AppRevisionRoute
   AppRfpIntakeRoute: typeof AppRfpIntakeRoute
   AppRoadmapRoute: typeof AppRoadmapRoute
+  AppSalesEngineRoute: typeof AppSalesEngineRoute
   AppShapingRoute: typeof AppShapingRoute
   AppSubclientMappingRoute: typeof AppSubclientMappingRoute
   AppSubmissionRoute: typeof AppSubmissionRoute
   AppTalentSponsorsRoute: typeof AppTalentSponsorsRoute
   AppTechCostRoute: typeof AppTechCostRoute
   AppVenuePitchRoute: typeof AppVenuePitchRoute
+  AppWonProposalsRoute: typeof AppWonProposalsRoute
+  AppAccountSlugRoute: typeof AppAccountSlugRoute
+  AppEventOpsSlugRoute: typeof AppEventOpsSlugRoute
+  AppPlatformSlugRoute: typeof AppPlatformSlugRoute
+  AppSubClientsIdRoute: typeof AppSubClientsIdRoute
+  AppSubClientsIndexRoute: typeof AppSubClientsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAccessRoute: AppAccessRoute,
+  AppActivityRoute: AppActivityRoute,
   AppApprovalsRoute: AppApprovalsRoute,
   AppAuditRoute: AppAuditRoute,
   AppAwardRoute: AppAwardRoute,
@@ -1066,13 +1327,17 @@ const AppRouteChildren: AppRouteChildren = {
   AppComplianceRoute: AppComplianceRoute,
   AppConnectorsRoute: AppConnectorsRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppDiscoveryRoute: AppDiscoveryRoute,
   AppDocumentsRoute: AppDocumentsRoute,
+  AppEventDetailsRoute: AppEventDetailsRoute,
+  AppEventHandoffsRoute: AppEventHandoffsRoute,
   AppEventIntakeRoute: AppEventIntakeRoute,
+  AppEventWizardRoute: AppEventWizardRoute,
   AppExecutionRoute: AppExecutionRoute,
   AppExecutionPrepRoute: AppExecutionPrepRoute,
   AppFinalizationRoute: AppFinalizationRoute,
-  AppFuturePodsRoute: AppFuturePodsRoute,
   AppGoalsRoute: AppGoalsRoute,
+  AppHandoffsRoute: AppHandoffsRoute,
   AppMasterMapRoute: AppMasterMapRoute,
   AppMaturityRoute: AppMaturityRoute,
   AppOpportunitiesRoute: AppOpportunitiesRoute,
@@ -1089,12 +1354,19 @@ const AppRouteChildren: AppRouteChildren = {
   AppRevisionRoute: AppRevisionRoute,
   AppRfpIntakeRoute: AppRfpIntakeRoute,
   AppRoadmapRoute: AppRoadmapRoute,
+  AppSalesEngineRoute: AppSalesEngineRoute,
   AppShapingRoute: AppShapingRoute,
   AppSubclientMappingRoute: AppSubclientMappingRoute,
   AppSubmissionRoute: AppSubmissionRoute,
   AppTalentSponsorsRoute: AppTalentSponsorsRoute,
   AppTechCostRoute: AppTechCostRoute,
   AppVenuePitchRoute: AppVenuePitchRoute,
+  AppWonProposalsRoute: AppWonProposalsRoute,
+  AppAccountSlugRoute: AppAccountSlugRoute,
+  AppEventOpsSlugRoute: AppEventOpsSlugRoute,
+  AppPlatformSlugRoute: AppPlatformSlugRoute,
+  AppSubClientsIdRoute: AppSubClientsIdRoute,
+  AppSubClientsIndexRoute: AppSubClientsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -1102,6 +1374,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  AdminRoute: AdminRoute,
   HelpRoute: HelpRoute,
   OrientationRoute: OrientationRoute,
   RolesRoute: RolesRoute,

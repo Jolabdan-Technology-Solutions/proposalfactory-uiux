@@ -35,7 +35,7 @@ Roles (defined in `src/lib/roles.ts`): Platform Owner (Delano), Super Admin, Ten
 - Pod 1: `_app.opportunities.tsx` (Jira-like Board/Calendar/List/Uploads views), `_app.pipeline.tsx` (filterable deal table), `_app.bulk-edit.tsx`, `_app.proposals.tsx` (Drafts/Archived/New tabs), `_app.subclient-mapping.tsx`, plus phase screens (`_app.rfp-intake.tsx`, `_app.compliance.tsx`, `_app.shaping.tsx`, `_app.bid-decision.tsx`, `_app.revision.tsx`, `_app.tech-cost.tsx`, `_app.qa-amendments.tsx`, `_app.finalization.tsx`, `_app.submission.tsx`, `_app.post-submit.tsx`, `_app.award.tsx`, `_app.closeout.tsx`, …)
 - Pod 2: `_app.event-intake.tsx`, `_app.venue-pitch.tsx`, `_app.production.tsx`, `_app.comms-registration.tsx`, `_app.talent-sponsors.tsx`, `_app.execution-prep.tsx`, `_app.execution.tsx`, `_app.closeout.tsx`
 - Pod 3: `_app.approvals.tsx`, `_app.audit.tsx`, `_app.budget.tsx`, `_app.documents.tsx` (plain document library — no steps), `_app.access.tsx`, `_app.maturity.tsx`
-- Reference: `_app.overview.tsx`, `_app.master-map.tsx`, `_app.connectors.tsx` (MCP/integration gateway), `_app.future-pods.tsx`, `_app.roadmap.tsx`, `_app.reference.tsx`
+- Reference: `_app.overview.tsx`, `_app.master-map.tsx`, `_app.connectors.tsx` (MCP/integration gateway), `_app.roadmap.tsx`, `_app.reference.tsx`
 
 Phase screens are **data-driven**: one entry in `src/lib/workflow.ts` (`WORKFLOW_STEPS`) renders through `src/components/wireframe/phase-screen.tsx` + `step-ui.tsx`. To add a screen, add a workflow entry and a thin route file.
 

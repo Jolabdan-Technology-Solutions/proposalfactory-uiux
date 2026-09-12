@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Download } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, Download } from "lucide-react";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Annotation,
   CompanionBubble,
@@ -10,19 +11,29 @@ import { ScreenHeader } from "@/components/wireframe/screen-header";
 import { ButlerVideo } from "@/components/wireframe/butler-video";
 import { Collapse } from "@/components/wireframe/collapse";
 import { StepUI } from "@/components/wireframe/step-ui";
+import { StepHandoff } from "@/components/wireframe/handoff-card";
+import { StepJump } from "@/components/wireframe/step-jump";
 import { cn } from "@/lib/utils";
-import type { SubStep, WorkflowStep } from "@/lib/workflow";
+import {
+  adjacentPod1Step,
+  isBlockingHumanGate,
+  type SubStep,
+  type WorkflowStep,
+} from "@/lib/workflow";
 import { faqForPath, videoForPod } from "@/lib/videos";
+import { Button } from "@/components/ui/button";
 
 import { POD1_PARTS } from "@/components/wireframe/journey-header";
 
 function StepChips({
   subs,
   active,
+  completed,
   onSelect,
 }: {
   subs: SubStep[];
   active: number;
+  completed: Set<number>;
   onSelect: (i: number) => void;
 }) {
   return (
@@ -36,11 +47,11 @@ function StepChips({
             "rounded-full border px-3 py-1 font-mono text-[10px] transition-colors " +
             (i === active
               ? "border-accent bg-accent/15 text-accent"
-              : "border-dashed border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground")
+              : "border-wireline text-muted-foreground hover:border-accent/60 hover:text-foreground")
           }
         >
-          {String(s.n).padStart(2, "0")}
-          {s.gate ? " ·" : ""}
+          {completed.has(s.n) ? <Check className="mr-1 inline h-3 w-3" /> : null}
+          {String(s.n).padStart(2, "0")}{s.gate ? " ·" : ""}
         </button>
       ))}
     </div>
@@ -49,15 +60,77 @@ function StepChips({
 
 /** Generic phase screen: clickable step-by-step UI + artifact + companion + triggers. */
 export function PhaseScreen({ step, showGuidance = true }: { step: WorkflowStep; showGuidance?: boolean }) {
+  const navigate = useNavigate();
+  const hash = useRouterState({ select: (state) => state.location.hash });
   const moduleVideo = showGuidance ? videoForPod(step.pod) : null;
   const faq = faqForPath(step.path);
   const subs = step.steps ?? [];
+  const requestedStep = useMemo(() => {
+    const match = hash.match(/step-(\d+)/);
+    return match ? Number(match[1]) : undefined;
+  }, [hash]);
   const [active, setActive] = useState(0);
+  const [completed, setCompleted] = useState<Set<number>>(() => new Set());
+  const [outcomes, setOutcomes] = useState<Record<number, string>>({});
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const current = subs[Math.min(active, subs.length - 1)];
 
   const isPod1 = step.pod === 1 && subs.length > 0;
   const firstN = subs[0]?.n ?? 1;
   const activePart = POD1_PARTS.find((p) => firstN >= p.from && firstN <= p.to);
+  const blockingGate = current ? isBlockingHumanGate(current) : false;
+  const nextAcrossPhase = current && step.pod === 1 ? adjacentPod1Step(current.n, 1) : undefined;
+  const previousAcrossPhase = current && step.pod === 1 ? adjacentPod1Step(current.n, -1) : undefined;
+
+  useEffect(() => {
+    if (!requestedStep) return;
+    const requestedIndex = subs.findIndex((sub) => sub.n === requestedStep);
+    if (requestedIndex >= 0) setActive(requestedIndex);
+  }, [requestedStep, subs]);
+
+  useEffect(() => () => {
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
+  }, []);
+
+  function goToPosition(position: ReturnType<typeof adjacentPod1Step>) {
+    if (!position) return;
+    if (position.phase.path === step.path) {
+      setActive(position.indexInPhase);
+      return;
+    }
+    navigate({ to: position.phase.path, hash: `step-${position.step.n}` });
+  }
+
+  function advance() {
+    if (!current) return;
+    setCompleted((previous) => new Set(previous).add(current.n));
+    setOutcomes((previous) => ({ ...previous, [current.n]: "Completed — opening the next step…" }));
+    if (!nextAcrossPhase) {
+      setOutcomes((previous) => ({ ...previous, [current.n]: "Workflow complete — Step 70 approved." }));
+      return;
+    }
+    advanceTimer.current = setTimeout(() => goToPosition(nextAcrossPhase), 450);
+  }
+
+  function decide(decision: "approved" | "changes" | "declined") {
+    if (!current) return;
+    if (decision === "approved") {
+      setOutcomes((previous) => ({ ...previous, [current.n]: "Approved — opening the next step…" }));
+      setCompleted((previous) => new Set(previous).add(current.n));
+      if (!nextAcrossPhase) {
+        setOutcomes((previous) => ({ ...previous, [current.n]: "Approved — the 70-step workflow is complete." }));
+        return;
+      }
+      advanceTimer.current = setTimeout(() => goToPosition(nextAcrossPhase), 450);
+      return;
+    }
+    setOutcomes((previous) => ({
+      ...previous,
+      [current.n]: decision === "changes"
+        ? "Changes requested. This gate remains open until the revised work is approved."
+        : "Declined. This gate remains closed and the workflow cannot advance.",
+    }));
+  }
 
   return (
     <div>
@@ -74,8 +147,9 @@ export function PhaseScreen({ step, showGuidance = true }: { step: WorkflowStep;
               <h2 className="text-sm font-bold">What you see, step by step</h2>
             </div>
             <div className="flex flex-wrap items-center gap-2">
+              <StepJump current={current?.n} />
               {step.maturity && (
-                <span className="rounded-full border border-dashed border-wireline px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+                <span className="rounded-full border border-wireline px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
                   Maturity · {step.maturity}
                 </span>
               )}
@@ -94,7 +168,7 @@ export function PhaseScreen({ step, showGuidance = true }: { step: WorkflowStep;
                     "rounded-xl border p-4 transition-colors",
                     isActive
                       ? "border-accent bg-accent/10"
-                      : "border-dashed border-wireline opacity-60",
+                      : "border-wireline opacity-60",
                   )}
                 >
                   <div className="flex items-center gap-2.5">
@@ -103,7 +177,7 @@ export function PhaseScreen({ step, showGuidance = true }: { step: WorkflowStep;
                         "flex size-6 shrink-0 items-center justify-center rounded-full font-mono text-[11px] font-bold",
                         isActive
                           ? "bg-accent text-accent-foreground"
-                          : "border border-dashed border-wireline text-muted-foreground",
+                          : "border border-wireline text-muted-foreground",
                       )}
                     >
                       {p.n}
@@ -119,11 +193,11 @@ export function PhaseScreen({ step, showGuidance = true }: { step: WorkflowStep;
                   </div>
                   <p className="mt-1.5 text-[11px] text-muted-foreground">{p.sub}</p>
                   {isActive ? (
-                    <div className="mt-3 border-t border-dashed border-wireline pt-3">
+                    <div className="mt-3 border-t border-wireline pt-3">
                       <p className="mb-2 font-mono text-[9px] uppercase tracking-widest text-accent">
                         You are here · {step.label}
                       </p>
-                      <StepChips subs={subs} active={active} onSelect={setActive} />
+                      <StepChips subs={subs} active={active} completed={completed} onSelect={setActive} />
                     </div>
                   ) : null}
                 </div>
@@ -140,7 +214,7 @@ export function PhaseScreen({ step, showGuidance = true }: { step: WorkflowStep;
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-bold">What you see, step by step</h2>
               {step.maturity && (
-                <span className="rounded-full border border-dashed border-wireline px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+                <span className="rounded-full border border-wireline px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
                   Maturity · {step.maturity}
                 </span>
               )}
@@ -151,39 +225,49 @@ export function PhaseScreen({ step, showGuidance = true }: { step: WorkflowStep;
             <>
               {!isPod1 && (
                 <div className="mt-3">
-                  <StepChips subs={subs} active={active} onSelect={setActive} />
+                  <StepChips subs={subs} active={active} completed={completed} onSelect={setActive} />
                 </div>
               )}
 
               {current && (
                 <>
                   <div className="mt-3">
-                    <StepUI step={current} />
+                    <StepUI
+                      key={current.n}
+                      step={current}
+                      onComplete={advance}
+                      onGateDecision={decide}
+                      outcome={outcomes[current.n]}
+                    />
+                    <StepHandoff pod={step.pod} step={current.n} />
                   </div>
                   <div className="mt-3 flex flex-wrap items-center gap-3">
-                    <button
+                    <Button
                       type="button"
-                      disabled={active === 0}
-                      onClick={() => setActive((a) => Math.max(0, a - 1))}
-                      className="rounded-md border border-dashed border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground disabled:opacity-40"
+                      variant="outline"
+                      size="sm"
+                      disabled={!previousAcrossPhase}
+                      onClick={() => goToPosition(previousAcrossPhase)}
+                      className="border-wireline font-mono text-[11px] text-muted-foreground"
                     >
                       ← Previous step
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
-                      disabled={active >= subs.length - 1}
-                      onClick={() => setActive((a) => Math.min(subs.length - 1, a + 1))}
-                      className="rounded-md border border-dashed border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground disabled:opacity-40"
+                      size="sm"
+                      disabled={blockingGate || !nextAcrossPhase}
+                      onClick={advance}
+                      className="font-mono text-[11px]"
                     >
-                      Next step →
-                    </button>
+                      {active >= subs.length - 1 ? "Next phase →" : "Next step →"}
+                    </Button>
                     <span className="font-mono text-[10px] text-muted-foreground">
-                      Step {active + 1} of {subs.length} in this phase · run by {current.agent}
+                       Step {current.n} of 70 · run by {current.agent}
                     </span>
                     {current.gate && <GateBadge label={current.gate} />}
                     <button
                       type="button"
-                      className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-dashed border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:border-accent hover:text-accent"
+                      className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-wireline px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:border-accent hover:text-accent"
                     >
                       <Download className="h-3.5 w-3.5" /> Download report
                     </button>
@@ -206,7 +290,7 @@ export function PhaseScreen({ step, showGuidance = true }: { step: WorkflowStep;
                         className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-secondary/40"
                       >
                         <span className="w-7 shrink-0 font-mono text-[10px] text-muted-foreground">
-                          {String(s.n).padStart(2, "0")}
+                          {completed.has(s.n) ? "✓" : String(s.n).padStart(2, "0")}
                         </span>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm">{s.name}</p>

@@ -45,7 +45,7 @@ function GettingStarted() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-dashed border-wireline px-6 py-5 lg:px-14">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-wireline px-6 py-5 lg:px-14">
         <Link to="/" className="min-w-0">
           <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         </Link>
@@ -100,7 +100,7 @@ function GettingStarted() {
         </div>
       </main>
 
-      <footer className="border-t border-dashed border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
+      <footer className="border-t border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
         © 2026 Mr. B2G &amp; Associates, LLC · The Proposal Factory (TPF) · Privacy
       </footer>
     </div>

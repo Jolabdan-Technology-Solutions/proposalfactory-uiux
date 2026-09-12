@@ -16,7 +16,7 @@ export function SkeletonBlock({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-wireline bg-card/40 p-4",
+        "flex flex-col items-center justify-center gap-1 rounded-lg border border-wireline bg-card/40 p-4",
         className,
       )}
     >
@@ -56,7 +56,7 @@ export function GateBadge({ label = "Human gate" }: { label?: string }) {
 export function CompanionBubble({ pod, children }: { pod: 1 | 2 | 3; children: ReactNode }) {
   const c = COMPANIONS[pod];
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-dashed border-wireline bg-secondary/50 p-4">
+    <div className="flex items-start gap-3 rounded-xl border border-accent/20 bg-gradient-to-r from-accent/10 to-primary/10 p-4">
       <span
         className={cn(
           "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border font-mono text-sm font-semibold",
@@ -89,7 +89,7 @@ export function TriggerChip({ to, children }: { to: string; children: ReactNode 
   return (
     <Link
       to={to}
-      className="inline-flex items-center gap-2 rounded-full border border-dashed border-wireline bg-card px-3 py-1.5 font-mono text-[11px] text-accent transition-colors hover:border-accent hover:bg-accent/10"
+      className="inline-flex items-center gap-2 rounded-full border border-wireline bg-card px-3 py-1.5 font-mono text-[11px] text-accent transition-colors hover:border-accent hover:bg-accent/10"
     >
       ⇢ {children}
     </Link>

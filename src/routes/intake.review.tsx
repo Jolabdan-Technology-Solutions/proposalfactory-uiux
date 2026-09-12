@@ -39,7 +39,7 @@ function ReviewSubmit() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-dashed border-wireline px-6 py-5 lg:px-14">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-wireline px-6 py-5 lg:px-14">
         <Link to="/" className="min-w-0">
           <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         </Link>
@@ -64,7 +64,7 @@ function ReviewSubmit() {
           also be filled in later with your advisor.
         </p>
 
-        <ul className="mt-8 divide-y divide-dashed divide-wireline rounded-2xl border border-dashed border-wireline bg-card/40">
+        <ul className="mt-8 divide-y divide-dashed divide-wireline rounded-2xl border border-wireline bg-card/40">
           {SUMMARY.map((s) => (
             <li
               key={s.section}
@@ -78,7 +78,7 @@ function ReviewSubmit() {
                 className={
                   s.state === "complete"
                     ? "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-accent/60 bg-accent/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-accent"
-                    : "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-dashed border-wireline px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+                    : "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-wireline px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
                 }
               >
                 {s.state === "complete" ? (
@@ -99,7 +99,7 @@ function ReviewSubmit() {
           <ButlerVideo id="sylvia-intake-closing" />
         </div>
 
-        <label className="mt-8 flex items-start gap-3 rounded-xl border border-dashed border-wireline bg-card/40 p-4">
+        <label className="mt-8 flex items-start gap-3 rounded-xl border border-wireline bg-card/40 p-4">
           <input
             type="checkbox"
             checked={consent}
@@ -132,7 +132,7 @@ function ReviewSubmit() {
         </p>
       </main>
 
-      <footer className="border-t border-dashed border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
+      <footer className="border-t border-wireline px-6 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
         © 2026 Mr. B2G &amp; Associates, LLC · The Proposal Factory (TPF) · Privacy
       </footer>
     </div>

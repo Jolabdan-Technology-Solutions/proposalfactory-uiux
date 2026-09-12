@@ -22,7 +22,7 @@ export function Collapse({
   return (
     <details
       open={defaultOpen}
-      className={cn("group rounded-xl border border-dashed border-wireline bg-card/40", className)}
+      className={cn("group rounded-xl border border-wireline bg-card/40", className)}
     >
       <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-3.5 [&::-webkit-details-marker]:hidden">
         <div className="min-w-0 flex-1">
@@ -33,7 +33,7 @@ export function Collapse({
         </div>
         <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
       </summary>
-      <div className="border-t border-dashed border-wireline px-5 py-4">{children}</div>
+      <div className="border-t border-wireline px-5 py-4">{children}</div>
     </details>
   );
 }

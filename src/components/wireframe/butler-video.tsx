@@ -85,10 +85,10 @@ export function ButlerVideo({
   }
 
   const btn =
-    "inline-flex items-center gap-2 rounded-lg border border-dashed border-wireline px-3 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground transition-colors hover:border-accent hover:text-foreground";
+    "inline-flex items-center gap-2 rounded-lg border border-wireline px-3 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground transition-colors hover:border-accent hover:text-foreground";
 
   return (
-    <figure className="w-full overflow-hidden rounded-2xl border border-dashed border-wireline bg-card/50">
+    <figure className="w-full overflow-hidden rounded-2xl border border-wireline bg-card/50">
       <div className="relative aspect-video w-full bg-secondary/60">
         {asset.src ? (
           <video
@@ -116,7 +116,7 @@ export function ButlerVideo({
       </div>
 
       <figcaption
-        className={`flex flex-col gap-3 border-t border-dashed border-wireline ${compact ? "p-3" : "p-4"}`}
+        className={`flex flex-col gap-3 border-t border-wireline ${compact ? "p-3" : "p-4"}`}
       >
         {asset.caption && !compact && (
           <p className="text-sm leading-relaxed text-muted-foreground">{asset.caption}</p>
@@ -151,7 +151,7 @@ export function ButlerVideo({
         </div>
 
         {showTranscript && (
-          <p className="rounded-lg border border-dashed border-wireline bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground">
+          <p className="rounded-lg border border-wireline bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground">
             {asset.transcript ??
               "Transcript and captions will be attached to this clip with the final recording."}
           </p>

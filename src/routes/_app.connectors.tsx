@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PhaseScreen } from "@/components/wireframe/phase-screen";
 import { WORKFLOW_STEPS } from "@/lib/workflow";
+import { LeadFlowStrip } from "@/components/wireframe/lead-flow-strip";
+import { IntegrationStrip } from "@/components/wireframe/integration-strip";
 
 const step = WORKFLOW_STEPS.find((s) => s.path === "/connectors")!;
 
@@ -14,5 +16,25 @@ export const Route = createFileRoute("/_app/connectors")({
       { property: "og:type", content: "website" },
     ],
   }),
-  component: () => <PhaseScreen step={step} />,
+  component: ConnectorsPage,
 });
+
+function ConnectorsPage() {
+  return (
+    <div>
+      <PhaseScreen step={step} />
+      <section className="mt-8 space-y-3">
+        <h2 className="text-sm font-bold">How the outside tools are actually used</h2>
+        <p className="max-w-2xl text-xs text-muted-foreground">
+          Zoho CRM holds the buyer relationship, Asana holds the human work, QuickBooks holds the
+          money and the platform holds the opportunity itself. The same opportunity ID travels
+          across all of them — records are created at three gates, never re-created.
+        </p>
+        <LeadFlowStrip />
+        <IntegrationStrip pod={1} />
+        <IntegrationStrip pod={2} />
+        <IntegrationStrip pod={3} />
+      </section>
+    </div>
+  );
+}

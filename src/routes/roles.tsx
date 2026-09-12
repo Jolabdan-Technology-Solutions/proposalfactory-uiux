@@ -28,7 +28,12 @@ function RoleChooser() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState<RoleId | "">("");
 
-  const role = ROLES.find((r) => r.id === selected);
+  // Platform Owner and Super Administrator never sign in here — they have
+  // their own direct access links.
+  const selectableRoles = ROLES.filter(
+    (r) => r.id !== "platform-owner-admin" && r.id !== "super-admin",
+  );
+  const role = selectableRoles.find((r) => r.id === selected);
 
   function continueToSignIn() {
     if (!role) return;
@@ -38,7 +43,7 @@ function RoleChooser() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-dashed border-wireline px-8 py-5 lg:px-14">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-wireline px-8 py-5 lg:px-14">
         <Link to="/" className="min-w-0">
           <img src={tpfLogo} alt="The Proposal Factory" className="h-20 w-auto sm:h-24" />
         </Link>
@@ -64,12 +69,12 @@ function RoleChooser() {
             id="role"
             value={selected}
             onChange={(e) => setSelected(e.target.value as RoleId)}
-            className="w-full appearance-none rounded-xl border border-dashed border-wireline bg-card/60 px-5 py-4 text-base font-semibold text-foreground outline-none transition-colors focus:border-accent [&>option]:bg-card"
+            className="w-full appearance-none rounded-xl border border-wireline bg-card/60 px-5 py-4 text-base font-semibold text-foreground outline-none transition-colors focus:border-accent [&>option]:bg-card"
           >
             <option value="" disabled>
               Select your role…
             </option>
-            {ROLES.map((r) => (
+            {selectableRoles.map((r) => (
               <option key={r.id} value={r.id}>
                 {r.name}
                 {r.status === "planned" ? " (at go-live)" : ""}
@@ -92,7 +97,7 @@ function RoleChooser() {
         </button>
       </main>
 
-      <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-dashed border-wireline px-8 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
+      <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-wireline px-8 py-4 font-mono text-[10px] text-muted-foreground lg:px-14">
         <span>© 2026 Mr. B2G &amp; Associates, LLC</span>
         <span>The Proposal Factory (TPF) · Privacy</span>
       </footer>

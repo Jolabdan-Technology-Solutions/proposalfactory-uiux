@@ -1,164 +1,28 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Search,
   PlusCircle,
   ListChecks,
   Users,
-  FileCheck2,
   FolderOpen,
-  ListTree,
-  ChevronDown,
   ChevronRight,
-  Lock,
   Sparkles,
   Pencil,
   FileUp,
   FileText,
   Globe2,
   Satellite,
+  Gauge,
+  Layers,
+  Trash2,
   X,
 } from "lucide-react";
 import { WORKFLOW_STEPS } from "@/lib/workflow";
 import { CompanionBubble, GateBadge } from "@/components/wireframe/primitives";
 import { Collapse } from "@/components/wireframe/collapse";
+import { StepJump } from "@/components/wireframe/step-jump";
 
 const PHASES = WORKFLOW_STEPS.filter((s) => s.pod === 1);
-
-/** Steps 1–70 across Pod 1, flattened with their phase for the jump menu. */
-const ALL_STEPS = PHASES.flatMap((p) =>
-  (p.steps ?? []).map((s) => ({
-    n: s.n,
-    name: s.name,
-    gate: s.gate,
-    phaseLabel: p.label,
-    path: p.path,
-  })),
-);
-
-/** Sub-clients the workflow can be run for. Work always runs for one at a time. */
-const SUB_CLIENTS = [
-  "Mr. B2G Advisors (Prime & Consulting)",
-  "Atlas Defense Group",
-  "CivicPath Partners",
-  "GreenLine Energy",
-  "Northstar Health Solutions",
-  "Riverside Civic Co.",
-  "TribalWorks LLC",
-];
-
-/** Dropdown that lets the user jump straight to any of the 70 steps. */
-function StepJump() {
-  const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState<string | null>(null);
-  const [subClient, setSubClient] = useState<string>(SUB_CLIENTS[0]!);
-  const ref = useRef<HTMLDivElement>(null);
-
-
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, [open]);
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 rounded-lg border border-dashed border-wireline bg-card/60 px-3 py-2 text-xs font-semibold transition-colors hover:border-accent"
-      >
-        <ListTree className="h-4 w-4 text-accent" />
-        70-Step Workflow
-        <span className="hidden max-w-[10rem] truncate font-mono text-[10px] font-normal text-accent sm:inline">
-          · {subClient}
-        </span>
-        <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
-
-      {open && (
-        <div className="absolute right-0 z-30 mt-2 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl border border-border bg-card shadow-xl">
-          {/* Active sub-client — the workflow runs for this one only */}
-          <div className="border-b border-border px-4 py-3">
-            <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              Active sub-client
-            </label>
-            <select
-              value={subClient}
-              onChange={(e) => setSubClient(e.target.value)}
-              className="mt-1 w-full cursor-pointer rounded-md border border-border bg-background/60 px-2 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-accent"
-            >
-              {SUB_CLIENTS.map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-            <p className="mt-1.5 font-mono text-[9px] leading-relaxed text-muted-foreground">
-              Every step you open runs for {subClient} only — not the whole 32,000+ opportunity pool.
-            </p>
-          </div>
-          <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              {ALL_STEPS.length} steps · {PHASES.length} phases
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setOpen(false);
-                document.getElementById("process")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="font-mono text-[10px] uppercase tracking-widest text-accent hover:underline"
-            >
-              View all
-            </button>
-          </div>
-
-          <div className="max-h-96 overflow-y-auto p-2">
-            {PHASES.map((p) => {
-              const isOpen = expanded === p.path;
-              return (
-                <div key={p.path} className="rounded-lg">
-                  <button
-                    type="button"
-                    onClick={() => setExpanded(isOpen ? null : p.path)}
-                    className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left hover:bg-secondary/50"
-                  >
-                    <ChevronDown className={`h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : "-rotate-90"}`} />
-                    <span className="flex-1 truncate text-xs font-semibold">{p.label}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground">
-                      {p.steps?.length ?? 0} steps
-                    </span>
-                  </button>
-                  {isOpen && (
-                    <ol className="ml-4 border-l border-dashed border-wireline pl-2">
-                      {(p.steps ?? []).map((s) => (
-                        <li key={s.n}>
-                          <Link
-                            to={p.path}
-                            onClick={() => setOpen(false)}
-                            className="flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-secondary/50"
-                          >
-                            <span className="w-7 shrink-0 font-mono text-[10px] text-muted-foreground">
-                              {String(s.n).padStart(2, "0")}
-                            </span>
-                            <span className="flex-1 truncate text-xs">{s.name}</span>
-                            {s.gate && <Lock className="h-3 w-3 shrink-0 text-accent" />}
-                          </Link>
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 /** Running step numbers across the 70-step Pod 1 process. */
 const RANGES = (() => {
@@ -174,15 +38,156 @@ const RANGES = (() => {
 const TOTAL = RANGES.reduce((n, r) => n + r.count, 0);
 
 const SIMPLE_ACTIONS = [
+  { title: "Sales Engine Command Center", desc: "Fit scores, win probability and the four Go/No-Go bands.", to: "/sales-engine", icon: Gauge },
   { title: "View opportunities", desc: "Board, calendar, list or your uploads directory.", to: "/opportunities", icon: ListChecks },
   { title: "Mapped sub-clients", desc: "Which capabilities match which buyers.", to: "/subclient-mapping", icon: Users },
-  { title: "Compliance check", desc: "Run the shred and compliance matrix.", to: "/compliance", icon: FileCheck2 },
   { title: "Document library", desc: "Drafts, boilerplate and past performance.", to: "/documents", icon: FolderOpen },
 ];
 
 type DialogKind = "analyze" | "add" | null;
+type RunKind = "new" | "all";
+
+const RUN_STAGES = [
+  "Loading opportunities…",
+  "Running deterministic scoring…",
+  "Matching against sub-client NAICS + keywords…",
+  "Writing Claude narratives (capped per run)…",
+  "Refreshing pipeline results…",
+];
+
+function AnalysisRun({ kind, onDone }: { kind: RunKind; onDone: () => void }) {
+  const total = kind === "new" ? 48 : 32644;
+  const [pct, setPct] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPct((p) => {
+        const next = p + (kind === "new" ? 7 : 4);
+        if (next >= 100) {
+          clearInterval(timer);
+          return 100;
+        }
+        return next;
+      });
+    }, 220);
+    return () => clearInterval(timer);
+  }, [kind]);
+
+  const stage = RUN_STAGES[Math.min(Math.floor((pct / 100) * RUN_STAGES.length), RUN_STAGES.length - 1)];
+  const done = pct >= 100;
+
+  return (
+    <div className="rounded-lg border border-border bg-secondary/30 p-4">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-sm font-semibold">
+          {kind === "new" ? "Analyzing new opportunities" : "Analyzing entire pipeline"}
+        </p>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          {done ? "Complete" : `${pct}%`}
+        </span>
+      </div>
+      <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary">
+        <div
+          className={`h-full rounded-full transition-all duration-200 ${done ? "bg-pod-1" : "bg-accent"}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      {done ? (
+        <div className="mt-3 space-y-2">
+          <p className="text-xs text-muted-foreground">
+            {total.toLocaleString()} opportunities analyzed and scored. Sample run — no live feeds
+            connected.
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              to="/pipeline"
+              className="rounded-md border border-accent/50 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent/20"
+            >
+              View results in pipeline
+            </Link>
+            <button
+              type="button"
+              onClick={onDone}
+              className="rounded-md border border-wireline px-3 py-1.5 text-xs text-muted-foreground hover:border-accent hover:text-foreground"
+            >
+              Run again
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p className="mt-2 font-mono text-[10px] text-muted-foreground">{stage}</p>
+      )}
+    </div>
+  );
+}
+
+/** Pipeline housekeeping: preview, confirm, then show the sample outcome. */
+function MaintenanceAction({
+  icon: Icon,
+  title,
+  desc,
+  confirm,
+  done,
+  danger = false,
+}: {
+  icon: typeof Layers;
+  title: string;
+  desc: string;
+  confirm: string;
+  done: string;
+  danger?: boolean;
+}) {
+  const [state, setState] = useState<"idle" | "confirm" | "done">("idle");
+
+  return (
+    <div className="rounded-lg border border-wireline bg-secondary/30 p-4">
+      <div className="flex items-start gap-3">
+        <Icon className={`h-4 w-4 shrink-0 ${danger ? "text-destructive" : "text-accent"}`} />
+        <div className="min-w-0">
+          <p className="text-sm font-semibold">{title}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{desc}</p>
+        </div>
+      </div>
+      <div className="mt-3">
+        {state === "done" ? (
+          <p className="font-mono text-[10px] uppercase tracking-widest text-accent">{done}</p>
+        ) : state === "confirm" ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setState("done")}
+              className={`rounded-md border px-3 py-1.5 text-xs font-semibold ${
+                danger
+                  ? "border-destructive/50 bg-destructive/10 text-destructive hover:bg-destructive/20"
+                  : "border-accent/50 bg-accent/10 text-accent hover:bg-accent/20"
+              }`}
+            >
+              {confirm}
+            </button>
+            <button
+              type="button"
+              onClick={() => setState("idle")}
+              className="rounded-md border border-wireline px-3 py-1.5 text-xs text-muted-foreground hover:border-accent hover:text-foreground"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setState("confirm")}
+            className="rounded-md border border-wireline px-3 py-1.5 text-xs text-muted-foreground hover:border-accent hover:text-foreground"
+          >
+            {title}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function ActionDialog({ kind, onClose }: { kind: Exclude<DialogKind, null>; onClose: () => void }) {
+  const [run, setRun] = useState<RunKind | null>(null);
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
@@ -221,9 +226,10 @@ function ActionDialog({ kind, onClose }: { kind: Exclude<DialogKind, null>; onCl
             <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               32,596 of 32,644 opportunities analyzed · last run 9/7/2026, 2:56 PM
             </p>
-            <Link
-              to="/pipeline"
-              className="block rounded-lg border border-dashed border-wireline bg-secondary/30 p-4 transition-colors hover:border-accent"
+            <button
+              type="button"
+              onClick={() => setRun("new")}
+              className="block w-full rounded-lg border border-wireline bg-secondary/30 p-4 text-left transition-colors hover:border-accent"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm font-semibold">Analyze new opportunities</p>
@@ -235,10 +241,11 @@ function ActionDialog({ kind, onClose }: { kind: Exclude<DialogKind, null>; onCl
                 Only rows never analyzed (usually the latest import). Deterministic scoring is free;
                 Claude narratives are capped per run (≤25).
               </p>
-            </Link>
-            <Link
-              to="/pipeline"
-              className="block rounded-lg border border-dashed border-wireline bg-secondary/30 p-4 transition-colors hover:border-accent"
+            </button>
+            <button
+              type="button"
+              onClick={() => setRun("all")}
+              className="block w-full rounded-lg border border-wireline bg-secondary/30 p-4 text-left transition-colors hover:border-accent"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm font-semibold">Analyze entire pipeline</p>
@@ -246,25 +253,57 @@ function ActionDialog({ kind, onClose }: { kind: Exclude<DialogKind, null>; onCl
                   Expensive · rematch + cap ≤15 · 32,644 opportunities
                 </span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Rematches every opportunity against current sub-client NAICS + keyword overrides. Use
-                after NAICS/keyword cleanup — not the everyday path.
+            <p className="mt-1 text-xs text-muted-foreground">
+              Rematches every opportunity against current sub-client NAICS + keyword overrides. Use
+              after NAICS/keyword cleanup — not the everyday path.
+            </p>
+          </button>
+          {run && <AnalysisRun kind={run} onDone={() => setRun(null)} />}
+          <p className="pt-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            Matching is not scoring · analyze matches sub-clients (Step 4), the Go/No-Go scorecard
+            sets the band (Step 15)
+          </p>
+          <Link
+            to="/sales-engine"
+            className="flex items-center gap-3 rounded-lg border border-wireline bg-secondary/30 p-4 transition-colors hover:border-accent"
+          >
+            <Gauge className="h-4 w-4 shrink-0 text-accent" />
+            <div>
+              <p className="text-sm font-semibold">Score in the Sales Engine</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Run the 10-factor Go/No-Go scorecard and see the four-band split.
               </p>
-            </Link>
-            <Link
-              to="/bulk-edit"
+            </div>
+          </Link>
+          <Link
+            to="/bulk-edit"
 
-              className="flex items-center gap-3 rounded-lg border border-dashed border-wireline bg-secondary/30 p-4 transition-colors hover:border-accent"
-            >
-              <Pencil className="h-4 w-4 shrink-0 text-accent" />
-              <div>
-                <p className="text-sm font-semibold">Bulk edit</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  Update fields across many analyzed opportunities at once.
-                </p>
-              </div>
-            </Link>
-          </div>
+            className="flex items-center gap-3 rounded-lg border border-wireline bg-secondary/30 p-4 transition-colors hover:border-accent"
+          >
+            <Pencil className="h-4 w-4 shrink-0 text-accent" />
+            <div>
+              <p className="text-sm font-semibold">Bulk edit</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Update fields across many analyzed opportunities at once.
+              </p>
+            </div>
+          </Link>
+          <MaintenanceAction
+            icon={Layers}
+            title="Remove duplicates"
+            desc="Soft-deactivates the extra rows in a duplicate group (same solicitation number, source link, or title + agency + deadline). Keeps one canonical row — it does not wipe the pipeline."
+            confirm="Preview 12 duplicate groups, then confirm"
+            done="12 duplicate groups collapsed · 1 canonical row kept in each. Sample run."
+          />
+          <MaintenanceAction
+            icon={Trash2}
+            title="Purge & re-pool"
+            desc="Admin only. Archives every active opportunity and clears its mapping columns, so the next Discover + Analyze repopulates the board under the current formula. Use it when the scoring formula changes."
+            confirm="Archive all active rows and clear mappings"
+            done="Pipeline archived and re-pooled. Run Discover, then Analyze. Sample run."
+            danger
+          />
+        </div>
         ) : (
           <div className="mt-4 space-y-3">
             {[
@@ -277,7 +316,7 @@ function ActionDialog({ kind, onClose }: { kind: Exclude<DialogKind, null>; onCl
               <Link
                 key={o.title}
                 to={o.to}
-                className="flex items-center gap-3 rounded-lg border border-dashed border-wireline bg-secondary/30 p-4 transition-colors hover:border-accent"
+                className="flex items-center gap-3 rounded-lg border border-wireline bg-secondary/30 p-4 transition-colors hover:border-accent"
               >
                 <o.icon className="h-4 w-4 shrink-0 text-accent" />
                 <div>
@@ -322,13 +361,13 @@ function Pod1Hub() {
             <StepJump />
           </div>
         </div>
-        <div className="mt-4 border-b border-dashed border-wireline" />
+        <div className="mt-4 border-b border-wireline" />
       </header>
 
       {/* Pod sub-dashboard */}
       <section className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {METRICS.map((m) => (
-          <div key={m.label} className="rounded-xl border border-dashed border-wireline bg-card/40 p-4">
+          <div key={m.label} className="rounded-xl border border-wireline bg-card/40 p-4">
             <p className="text-2xl font-extrabold tracking-tight">{m.value}</p>
             <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               {m.label}
@@ -344,18 +383,18 @@ function Pod1Hub() {
           <button
             type="button"
             onClick={() => setDialog("analyze")}
-            className="group rounded-xl border border-dashed border-wireline bg-card/40 p-4 text-left transition-colors hover:border-accent"
+            className="group rounded-xl border border-wireline bg-card/40 p-4 text-left transition-colors hover:border-accent"
           >
             <Sparkles className="h-5 w-5 text-accent" />
             <p className="mt-3 text-sm font-semibold group-hover:text-accent">Analyze pipeline</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Score new rows, rematch the whole pipeline, or bulk edit.
+              Match rows to sub-clients, bulk edit, remove duplicates or re-pool.
             </p>
           </button>
           <button
             type="button"
             onClick={() => setDialog("add")}
-            className="group rounded-xl border border-dashed border-wireline bg-card/40 p-4 text-left transition-colors hover:border-accent"
+            className="group rounded-xl border border-wireline bg-card/40 p-4 text-left transition-colors hover:border-accent"
           >
             <PlusCircle className="h-5 w-5 text-accent" />
             <p className="mt-3 text-sm font-semibold group-hover:text-accent">Add opportunity</p>
@@ -367,7 +406,7 @@ function Pod1Hub() {
             <Link
               key={a.title}
               to={a.to}
-              className="group rounded-xl border border-dashed border-wireline bg-card/40 p-4 transition-colors hover:border-accent"
+              className="group rounded-xl border border-wireline bg-card/40 p-4 transition-colors hover:border-accent"
             >
               <a.icon className="h-5 w-5 text-accent" />
               <p className="mt-3 text-sm font-semibold group-hover:text-accent">{a.title}</p>
@@ -383,7 +422,8 @@ function Pod1Hub() {
           title={`The ${TOTAL}-step process`}
           summary={`${PHASES.length} phases · click any phase to open it`}
         >
-          <ol className="divide-y divide-border rounded-xl border border-border">
+          <ol className="mt-1 divide-y divide-border rounded-xl border border-border">
+
             {RANGES.map((r, i) => (
               <li key={r.path}>
                 <Link
@@ -412,10 +452,6 @@ function Pod1Hub() {
       </section>
 
       <div className="mt-8 space-y-4">
-        <CompanionBubble pod={1}>
-          {"\u201C"}The steps run in order on paper. In practice you jump to the piece of work in
-          front of you — I keep the trail consistent either way.{"\u201D"}
-        </CompanionBubble>
         <Collapse title="How this pod is organised" summary="Features first, sequence for reference">
           <p className="text-xs leading-relaxed text-muted-foreground">
             Pod 1 is one continuous process from opportunity discovery to award and closeout. The
@@ -424,6 +460,10 @@ function Pod1Hub() {
             full sequence stays visible without forcing anyone to walk it end to end.
           </p>
         </Collapse>
+        <CompanionBubble pod={1}>
+          {"\u201C"}The steps run in order on paper. In practice you jump to the piece of work in
+          front of you — I keep the trail consistent either way.{"\u201D"}
+        </CompanionBubble>
       </div>
 
       {dialog && <ActionDialog kind={dialog} onClose={() => setDialog(null)} />}
