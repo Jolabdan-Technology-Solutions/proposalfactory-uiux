@@ -71,7 +71,7 @@ function Dashboard() {
         <Collapse
           className="mb-8 border-accent/50 bg-accent/5"
           title={`${role.name} environment`}
-          summary={`${role.who} · ${role.scope}`}
+          summary={role.scope}
         >
           {role.status === "planned" && (
             <span className="mb-3 inline-block rounded-full border border-wireline px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
